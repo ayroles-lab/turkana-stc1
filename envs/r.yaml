@@ -1,0 +1,10 @@
+
+channels:
+  - r
+  - conda-forge
+dependencies:
+  - jupyter=1.0.0
+  - jupyter_client<7
+  - r-base
+  - r-tidyverse
+  - r-irkernel

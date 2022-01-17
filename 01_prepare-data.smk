@@ -1,8 +1,25 @@
 
 configfile: '01_config.yaml'
 
+
 rule all:
+    input: "fig/data/sfs.pdf"
+
+
+##################
+# PLOTTING RULES #
+##################
+
+rule plot_sfs:
     input: "output/sfs/sfs.tsv"
+    output: "fig/data/sfs.pdf"
+    conda: "envs/r.yaml"
+    notebook: "notebooks/plot/plot-sfs.r.ipynb"
+    
+
+##########################
+# DATA PREPARATION RULES # 
+##########################
 
 rule concatenate_sfs:
     input:
@@ -13,5 +30,4 @@ rule concatenate_sfs:
     output: "output/sfs/sfs.tsv"
     conda: "envs/simulate.yaml"
     benchmark: "benchmarks/prepare-data/concatenate-sfs.tsv"
-    log: "notebook-logs/prepare-data/concatenate-sfs.py.ipynb"
     notebook: "notebooks/prepare-data/contatenate-sfs.py.ipynb"
