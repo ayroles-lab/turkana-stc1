@@ -137,17 +137,17 @@ rule calculate_normalize_features:
     script: "scripts/simulations/features-and-normalization.py"
 
 
-rule drop_mutations:
+rule recapitate_and_drop_mutations:
     input:
         slim_output = OUTDIR/"{sim_id}_slim.trees",
         params_file = OUTDIR/"{sim_id}_simulation-params.json"
     output:
-        trees_file = OUTDIR/"{sim_id}_mutation-dropped.trees",
+        trees_file = OUTDIR/"{sim_id}_recapitated-mutation-dropped.trees",
         metrics_file = OUTDIR/"{sim_id}_msprime-metrics.txt",
         ms_file = OUTDIR/"{sim_id}_genotypes.ms"
-    benchmark: 'benchmarks/' + str(OUTDIR_ID) + '/{sim_id}_drop-mutations.tsv'
+    benchmark: 'benchmarks/' + str(OUTDIR_ID) + '/{sim_id}_recapitate-drop-mutations.tsv'
     conda: "envs/simulate.yaml"
-    script: "scripts/simulations/drop-mutations.py"
+    script: "scripts/simulations/recapitate-drop-mutations.py"
 
 
 checkpoint slim_has_run:
@@ -173,7 +173,6 @@ rule slim:
 rule slim_script:
     input:
         params_file = OUTDIR/"{sim_id}_simulation-params.json",
-        burnin = OUTDIR/"{sim_id}_burnin.trees",
         slim_templates = expand(
             'resources/slim-templates/{regime}.slim',
             regime=['neutral', 'hard', 'rnm', 'sgv', 'size-change']
@@ -184,16 +183,6 @@ rule slim_script:
         outdir = OUTDIR
     conda: "envs/simulate.yaml"
     script: "scripts/simulations/make-slim-script.py"
-
-
-rule burnin:
-    input:
-        params_file = OUTDIR/"{sim_id}_simulation-params.json"
-    output:
-        trees = OUTDIR/"{sim_id}_burnin.trees"
-    conda: "envs/simulate.yaml"
-    benchmark: 'benchmarks/' + str(OUTDIR_ID) + '/{sim_id}_burnin.tsv'
-    script: "scripts/simulations/simulation-burnin.py"
 
 
 rule instantiate_parameters:

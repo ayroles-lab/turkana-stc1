@@ -4,9 +4,9 @@ initialize() {
 
     defineConstant("this_seed", INITIAL_SEED); 
     defineConstant("simplification_interval", SIMPLIFICATION_INTERVAL);
-    defineConstant("burnin_file", "BURNIN_TREES_FILE");
     defineConstant("output_file", "OUTPUT_TREES_FILE");
     defineConstant("metrics_output", "METRICS_OUTPUT_FILE");
+    defineConstant("N", POP_SIZE);
     defineConstant("L", LOCUS_SIZE);
     defineConstant("r", RECOMBINATION_RATE);
 
@@ -21,7 +21,7 @@ initialize() {
 }
 
 1 late() {
-    sim.readFromPopulationFile(burnin_file);
+    sim.addSubpop("p1", N);
 }
 
 LAST_GENERATION late() {

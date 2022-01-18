@@ -13,7 +13,7 @@ def sample_genomes(ts, num_genomes):
     if num_genomes > ts.get_sample_size():
         return ts
     samples = np.random.choice(ts.get_samples(), size=num_genomes, replace=False)
-    return ts.simplify(samples)
+    return ts.simplify(samples, keep_input_roots=True)
 
 
 def get_slim_mut_freq(ts, slim_id):
@@ -109,9 +109,15 @@ with open(snakemake.input["params_file"], "r") as f:
     params = json.load(f)
 trees = pyslim.load(snakemake.input["slim_output"])
 
-# Sample, get statistics, and drop mutations
+# Sample, recapitate, get statistics, and drop mutations
 
 trees = sample_genomes(trees, int(params["sample-size"]))
+trees = pyslim.recapitate(
+    trees,
+    ancestral_Ne=int(params["diploid-population-size"]),
+    recombination_rate=float(params["recombination-rate"]),
+    random_seed=params["seed"]
+)
 msprime_metrics = dict()
 msprime_metrics.update(msprime_metrics_premutation(trees, params["regime"]))
 trees = clear_msprime_mutations(trees)

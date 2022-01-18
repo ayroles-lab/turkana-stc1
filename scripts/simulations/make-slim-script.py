@@ -20,6 +20,7 @@ replacements = {
     "SIMPLIFICATION_INTERVAL": int(params["simplification-interval"]),
     "RESTARTS_LIMIT": int(params["restarts-limit"]),
     # Biology
+    "POP_SIZE": int(params["diploid-population-size"]),
     "LOCUS_SIZE": int(params["locus-size"] - 1),
     "RECOMBINATION_RATE": params["recombination-rate"],
     "DOMINANCE_COEFFICIENT": params["dominance-coefficient"],
@@ -31,7 +32,6 @@ replacements = {
     "FREQUENCY_AT_SELECTION": params["frequency-at-selection"],
     # Files
     "CURRENT_WORKDIR": Path(".").resolve(),
-    "BURNIN_TREES_FILE": snakemake.input["burnin"],
     "OUTPUT_TREES_FILE": str(
         Path(snakemake.params["outdir"])
         / (snakemake.wildcards["sim_id"] + "_slim.trees")
