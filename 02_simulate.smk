@@ -2,6 +2,7 @@
 # UTILITY #
 # ======= #
 
+
 from random import choice
 
 if 'slim' not in config:
