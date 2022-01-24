@@ -21,4 +21,98 @@ CLOSED: [2022-01-14 Fri 18:21] DEADLINE: <2022-01-21 Fri>
 - [X] Make the local folder a git and github repo.
 - [X] Clone repo to =~/turkana= in the cluster.
 - [X] Set up an archival document locally for Turkana todos.
+
+*** 2022-01-17 Monday
+**** DONE Plot Turkana SFS [10/10]
+CLOSED: [2022-01-17 Mon 17:07]
+:PROPERTIES:
+:ARCHIVE_TIME: 2022-01-24 Mon 09:41
+:ARCHIVE_FILE: ~/pessoal/essencial/agenda.org
+:ARCHIVE_CATEGORY: PhD
+:ARCHIVE_TODO: DONE
+:ARCHIVE_ITAGS: project
+:ARCHIVE_OLPATH: PhD/Turkana selection/Turkana first simulations
+:END:
+
+- State "DONE"       from "DOING"      [2022-01-17 Mon 17:07]
+- State "DOING"      from "TODO"       [2022-01-17 Mon 16:23]
+- [X] Prepare snakefile for preparing the raw data.
+- [X] Rule: concatenate SFS raw data files and convert into proper SFS.
+- [X] Prepare snakefile for plotting in R.
+  - [X] Look up access to snakemake variables in an R notebook
+  - [X] Create conda environment for R notebooks
+- [X] Rule: plot proper SFS together with a 1/n SFS to see if it fits neutrality.
+  - [X] Look up the 1/n plotting in Ronen et al., 2013
+  - [X] Normalize raw SFS
+  - [X] Add reference for 1/x SFS
+  - [X] Color, labels, prettify, etc.
+
+*** 2022-01-19 Wednesday
+**** DONE Turkana first simulations, simple parameters [39/39]
+CLOSED: [2022-01-19 Wed 14:33]
+:PROPERTIES:
+:ARCHIVE_TIME: 2022-01-24 Mon 09:41
+:ARCHIVE_FILE: ~/pessoal/essencial/agenda.org
+:ARCHIVE_CATEGORY: PhD
+:ARCHIVE_TODO: DONE
+:ARCHIVE_ITAGS: project
+:ARCHIVE_OLPATH: PhD/Turkana selection/Turkana first simulations
+:END:
+- State "DONE"       from "DOING"      [2022-01-19 Wed 14:33]
+- State "DOING"      from "TODO"       [2022-01-18 Tue 15:49]
+- [X] Set up simulations locally
+  - [X] Same set of scripts, etc. as the Drosophila project.
+  - [X] Set up easy to use neutral parameters
+  - [X] Run locally to test the configs
+- [X] Simulation parameters
+  - [X] Constant Ne of 10,000.
+  - [X] Look up size of locus in my notes and in the raw empirical data
+  - [X] Look up human mutation and recombination rate in SLiM manual.
+  - [X] Change =project_parameters=: size of locus, smallest window size.
+  - [X] Pi normalization
+    - [X] Data preparation rule with =vcftools= windowed pi of empirical data.
+    - [X] What's the highest value? Use that as normalization.
+  - [X] Number of SNPs normalization: use total number in empirical VCF
+  - [X] Test local simulations with these parameters. Note run time, window sizes.
+- [X] Make a simple hard sweep config, with s between 0.1% and 100%. That's 3 orders of magnitude
+- [X] Use recapitation instead of a coalescent burn-in.
+  - [X] Git update everything, so all files are backed up nicely.
+  - [X] No rule for burn-in, burn-in not required.
+  - [X] Slim templates don't read burn-ins anymore.
+  - [X] Slim templates get a population size parameter and initialize their subpops.
+  - [X] Test run it now.
+  - [X] Look up recapitation recipe.
+  - [X] Add recapitation to mutation dropping script.
+  - [X] Test run it again.
+  - [X] Change name of mutation dropping everywhere to recapitation and mutation dropping
+  - [X] Update git with a new branch
+  - [X] Try updating SLiM to 3.7, see if that removes the warning we're getting
+- [X] Set up cluster simulations
+  - [X] Update slim on cluster to 3.7, add it to =~/bin/slim3.7=
+  - [X] Fetch and merge repo on cluster
+  - [X] Same set of scripts, etc. as the Drosophila project
+  - [X] Edit slurm script
+  - [X] Edit slurm submission script: can do more simulations per job, now
+  - [X] Create conda repo on cluster using snakemake
+  - [X] Debug cluster simulations
+  - [X] Clean cluster =raw-simulations= folder
+  - [X] Run neutral and 80% (ongoing) (hard) sweep simulations to start as a test, with 5000 simulations
+  - [X] Update git from cluster
+  - [X] Update local repo
+
+*** 2022-01-20 Thursday
+**** DONE Finalize Turkana first simulations [2/2]
+CLOSED: [2022-01-20 Thu 17:31]
+:PROPERTIES:
+:ARCHIVE_TIME: 2022-01-24 Mon 09:41
+:ARCHIVE_FILE: ~/pessoal/essencial/agenda.org
+:ARCHIVE_CATEGORY: PhD
+:ARCHIVE_TODO: DONE
+:ARCHIVE_ITAGS: project
+:ARCHIVE_OLPATH: PhD/Turkana selection/Turkana first simulations
+:END:
+- State "DONE"       from "TODO"       [2022-01-20 Thu 17:31]
+- [X] Confirm simulations ran okay
+- [X] Download simulations locally, to same directory as I did with Drosophila
+
   

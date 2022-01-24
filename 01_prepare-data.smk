@@ -14,7 +14,7 @@ rule all:
 ##################
 
 rule plot_sfs:
-    input: "output/sfs/sfs.tsv"
+    input: "output/empirical-statistics/sfs.tsv"
     output: "fig/data/sfs.pdf"
     conda: "envs/r.yaml"
     notebook: "notebooks/plot/plot-sfs.r.ipynb"
