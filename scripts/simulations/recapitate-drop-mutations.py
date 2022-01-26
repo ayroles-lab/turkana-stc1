@@ -109,15 +109,17 @@ with open(snakemake.input["params_file"], "r") as f:
     params = json.load(f)
 trees = pyslim.load(snakemake.input["slim_output"])
 
-# Sample, recapitate, get statistics, and drop mutations
 
+# The 2-epoch demographic model:
 Ne = int(params["diploid-population-size"])
 old_Ne = Ne * float(params["size-change-factor"])
 time = int(params["size-change-generation"])
 demography = msprime.Demography()
-demography.add_population(name="Turkana", initial_size=Ne)
-demography.add_population_parameters_change(time=time, population="Turkana", initial_size=old_Ne)
+demography.add_population(name="p1", initial_size=Ne)
+demography.add_population_parameters_change(time=time, population="p1", initial_size=old_Ne)
 
+
+# Sample, recapitate, get statistics, and drop mutations
 trees = sample_genomes(trees, int(params["sample-size"]))
 trees = pyslim.recapitate(
     trees,
@@ -130,6 +132,7 @@ msprime_metrics.update(msprime_metrics_premutation(trees, params["regime"]))
 trees = clear_msprime_mutations(trees)
 trees = drop_mutations(trees, params["mutation-rate"], params["seed"])
 msprime_metrics.update(msprime_metrics_postmutation(trees))
+
 
 # Create output
 
