@@ -111,10 +111,17 @@ trees = pyslim.load(snakemake.input["slim_output"])
 
 # Sample, recapitate, get statistics, and drop mutations
 
+Ne = int(params["diploid-population-size"])
+old_Ne = Ne * float(params["size-change-factor"])
+time = int(params["size-change-generation"])
+demography = msprime.Demography()
+demography.add_population(name="Turkana", initial_size=Ne)
+demography.add_population_parameters_change(time=time, population="Turkana", initial_size=old_Ne)
+
 trees = sample_genomes(trees, int(params["sample-size"]))
 trees = pyslim.recapitate(
     trees,
-    ancestral_Ne=int(params["diploid-population-size"]),
+    demography=demography,
     recombination_rate=float(params["recombination-rate"]),
     random_seed=params["seed"]
 )

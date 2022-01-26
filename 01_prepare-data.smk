@@ -5,8 +5,8 @@ configfile: '01_config.yaml'
 rule all:
     input:
         "fig/data/sfs.pdf",
-        "output/empirical-statistics/stc1-1kb_max-pi.txt",
-        "output/empirical-statistics/stc1-10kb_max-pi.txt"
+        expand("output/empirical-statistics/stc1-{kb}kb_max-pi.txt",
+               kb=[1, 10, 100])
 
 
 ##################
