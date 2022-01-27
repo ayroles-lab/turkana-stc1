@@ -1,0 +1,11 @@
+
+raw_sim_folder: "raw-simulations/20220126_simulations"
+epochs_for_model_training: 1
+validation_percentage: 0.2
+sims_per_regime: 5000
+
+training_ids:
+  - simple
+
+inference_targets:
+  - log-sel-strength

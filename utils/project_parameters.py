@@ -23,7 +23,7 @@ default_summary_statistics = [
 summary_statistic_order = ["pi", "num_snps", "num_haps", "H1", "H12", "H2/H1", "taj_D"]
 
 locus_size = 1_074_835 
-data_dimension = 11
+data_dimension = 13
 smallest_window = 10000
 
 default_simulation_parameters = {
@@ -42,13 +42,6 @@ default_simulation_parameters = {
     "size-change-generation": 7000,
     # What is N_ancestral/N_current?
     "size-change-factor": 1/2,
-}
-
-epochs_of_training = {
-    "log-sel-strength": 25,
-    "sweep-mode": 25,
-    "hard-vs-soft": 25,
-    "rnm-vs-sgv": 25,
 }
 
 neural_network_batch_size = 64

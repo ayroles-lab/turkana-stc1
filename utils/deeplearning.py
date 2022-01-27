@@ -86,6 +86,9 @@ class SweepsDataset(torch.utils.data.Dataset):
 
 class SimpleCNN2Layer(nn.Module):
     def __init__(self, input_dim, output_dim, in_channels=1):
+        """
+        The input dimensions must be 1, 5, 9, 13, 17, 21, etc.
+        """
         super().__init__()
 
         self.conv1 = nn.Conv2d(
