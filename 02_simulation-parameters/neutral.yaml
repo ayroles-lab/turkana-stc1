@@ -4,5 +4,5 @@ simulations: 10
 simulation-parameters:
 
   diploid-population-size: 30000
-  mutation-rate: 1e-8
-  recombination-rate: 1e-8
+  mutation-rate: 1.083e-8
+  recombination-rate: 1.083e-8

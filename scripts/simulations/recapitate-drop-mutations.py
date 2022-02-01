@@ -113,10 +113,14 @@ trees = pyslim.load(snakemake.input["slim_output"])
 # The 2-epoch demographic model:
 Ne = int(params["diploid-population-size"])
 old_Ne = Ne * float(params["size-change-factor"])
-time = int(params["size-change-generation"])
+total_time = int(params["size-change-generation"])
+with open(snakemake.input["slim_metrics"]) as f:
+    slim_metrics = {line.split('=')[0].strip(): line.split('=')[1].strip() for line in f}
+time_elapsed_during_forward_sim = int(slim_metrics["slim_generations"])
+time_to_recapitate = total_time - time_elapsed_during_forward_sim
 demography = msprime.Demography()
 demography.add_population(name="p1", initial_size=Ne)
-demography.add_population_parameters_change(time=time, population="p1", initial_size=old_Ne)
+demography.add_population_parameters_change(time=time_to_recapitate, population="p1", initial_size=old_Ne)
 
 
 # Sample, recapitate, get statistics, and drop mutations
@@ -132,6 +136,7 @@ msprime_metrics.update(msprime_metrics_premutation(trees, params["regime"]))
 trees = clear_msprime_mutations(trees)
 trees = drop_mutations(trees, params["mutation-rate"], params["seed"])
 msprime_metrics.update(msprime_metrics_postmutation(trees))
+msprime_metrics["size_change_generations_ago"] = time_to_recapitate
 
 
 # Create output

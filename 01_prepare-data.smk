@@ -4,25 +4,22 @@ configfile: '01_config.yaml'
 
 rule all:
     input:
-        "fig/data/sfs.pdf",
         expand("output/empirical-statistics/stc1-{kb}kb_max-pi.txt",
-               kb=[1, 10, 100])
+               kb=[1, 10, 100]),
+        "output/empirical-statistics/simulation-parameter-estimates.txt"
 
 
-##################
-# PLOTTING RULES #
-##################
-
-rule plot_sfs:
+rule estimate_simulation_parameters:
     input: "output/empirical-statistics/sfs.tsv"
-    output: "fig/data/sfs.pdf"
-    conda: "envs/r.yaml"
-    notebook: "notebooks/plot/plot-sfs.r.ipynb"
-    
+    output: "output/empirical-statistics/simulation-parameter-estimates.txt"
+    params:
+        total_genome_size = 3e9,
+        reference_ne = 30_000,
+        mu_over_r = 1,
+        sample_size = 220
+    conda: "envs/simulate.yaml"
+    notebook: "notebooks/prepare-data/estimate-simulation-parameters.py.ipynb"
 
-##########################
-# DATA PREPARATION RULES # 
-##########################
 
 rule empirical_statistics:
     input: "raw-data/stc1.vcf.gz"
@@ -34,12 +31,14 @@ rule empirical_statistics:
         'vcftools --gzvcf {input} --window-pi {wildcards.winsize}000 --window-pi-step 1000 --out "output/empirical-statistics/stc1-{wildcards.winsize}kb" ;'
         "cd output/empirical-statistics ;"
         "sed '1d' stc1-{wildcards.winsize}kb.windowed.pi | sort -gr -k 5 > stc1-{wildcards.winsize}kb_max-pi.txt"
+
         
 rule compress_raw_data:
     input: config["raw_sweep_region_vcf"]
     output: "raw-data/stc1.vcf.gz"
     shell:
         "gzip -c {input} > {output};"
+
 
 rule concatenate_sfs:
     input:

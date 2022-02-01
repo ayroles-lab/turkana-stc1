@@ -48,6 +48,7 @@ SELECTION_GENERATION: late() {
         if (freq >= f0) {
             cat("Established at " + freq + " - converting to beneficial\n");
             defineConstant("establfreq", freq);
+            defineConstant("establtime", sim.generation); 
             mut.setSelectionCoeff(s);
             // Add marker mutations to track lineages
             genomes = sim.subpopulations.genomes[sim.subpopulations.genomes.containsMutations(mut)];
@@ -105,11 +106,12 @@ function (void)finalize_sim(void) {
     sim.treeSeqOutput(output_file);
     current_gen_record = paste(c("slim_generations =", sim.generation));
     establishment_record = paste(c("actual_frequency_at_selection =", establfreq));
+    establishment_time_record = paste(c("sgv_selection_generation =", establtime));
     num_rest_record = paste(c('num_restarts =', sim.getValue('num_restarts')));
     num_final_lineages = paste(c('num_surviving_lineages =', sim.countOfMutationsOfType(m2)));
     num_start_lineages = paste(c('num_starting_lineages =', init_lineages));
     end_freq = paste(c("actual_frequency_at_sampling =", mutfreq()));
-    records = c(current_gen_record, establishment_record, num_rest_record, num_start_lineages, num_final_lineages, end_freq);
+    records = c(current_gen_record, establishment_record, establishment_time_record, num_rest_record, num_start_lineages, num_final_lineages, end_freq);
     writeFile(metrics_output, records, append=T);
     sim.simulationFinished();
 }

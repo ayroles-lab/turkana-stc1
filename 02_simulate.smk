@@ -152,7 +152,8 @@ rule calculate_normalize_features:
 rule recapitate_and_drop_mutations:
     input:
         slim_output = OUTDIR/"{sim_id}_slim.trees",
-        params_file = OUTDIR/"{sim_id}_simulation-params.json"
+        params_file = OUTDIR/"{sim_id}_simulation-params.json",
+        slim_metrics = OUTDIR/"{sim_id}_slim-metrics.txt"
     output:
         trees_file = OUTDIR/"{sim_id}_recapitated-mutation-dropped.trees",
         metrics_file = OUTDIR/"{sim_id}_msprime-metrics.txt",

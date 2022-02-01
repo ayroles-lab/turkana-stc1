@@ -15,3 +15,9 @@ simulation-parameters:
   selection-coordinate: 537418
   dominance-coefficient: 0.5
   frequency-at-sampling: 0.8
+
+  selection-region-size: 1
+  adaptive-mutation-rate:
+    distribution: log-uniform
+    lower: 8.3e-8
+    upper: 4.2e-5
