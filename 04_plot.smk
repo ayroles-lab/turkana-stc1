@@ -8,13 +8,13 @@ rule all:
 rule plot_sfs:
     input:
         empirical = "output/empirical-statistics/sfs.tsv",
-        simulated = "output/extra-information/simulated-neutral-sfs.tsv"
+        simulated = "output/simulation-data/simulated-neutral-sfs.tsv"
     output: "fig/sfs.pdf"
     conda: "envs/r.yaml"
     notebook: "notebooks/plot/plot-sfs.r.ipynb"
 
 rule prepare_simulated_sfs:
-    output: "output/extra-information/simulated-neutral-sfs.tsv"
+    output: "output/simulation-data/simulated-neutral-sfs.tsv"
     conda: "envs/simulate.yaml"
     params:
         num_neutral_simulations_to_use = 20
