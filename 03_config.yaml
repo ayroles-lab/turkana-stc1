@@ -1,6 +1,11 @@
 
+raw_sweep_region_vcf: "raw-data/20211130_sweep-region/high_cov.SNP1.hg19_chr8.phased_STC1.vcf.recode.vcf"
+
+stats_file_location: "resources/normalization-stats.tsv"
+
+
 raw_sim_folder: "raw-simulations/20220203_simulations"
-epochs_for_model_training: 25
+epochs_for_model_training: 50
 validation_percentage: 0.2
 sims_per_regime: 5000
 
@@ -9,3 +14,6 @@ training_ids:
 
 inference_targets:
   - log-sel-strength
+  - sweep-mode
+  - hard-vs-soft
+  - rnm-vs-sgv

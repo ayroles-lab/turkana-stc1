@@ -1,7 +1,6 @@
 
 configfile: '03_config.yaml'
 
-
 rule all:
     input:
         data_reports = expand(
@@ -13,7 +12,29 @@ rule all:
             target=config["inference_targets"],
             training=config["training_ids"],
             testing=["training", "validation"]
+        ),
+        empirical_inferences = expand(
+            "output/inferences-empirical/{target}_{training}_empirical.tsv",
+            target=config["inference_targets"],
+            training=config["training_ids"]
         )
+
+
+rule apply_model_to_empirical_data:
+    input:
+        fit_model = "output/trained-models/{target}_{training}.pth",
+        model_object = "output/trained-models/{target}_{training}.pkl",
+        model_labels = "output/trained-models/{target}_{training}_labels.txt",
+        data = "output/empirical-windows/data.tar",
+        logdata = "output/empirical-windows/logdata.tar"
+    output:
+        inferences = "output/inferences-empirical/{target}_{training}_empirical.tsv"
+    params:
+        application_type = "empirical"
+    conda: "envs/ml.yaml"
+    benchmark: "benchmarks/inference/apply-model-empirical_{target}_{training}.tsv"
+    log: "logs/inference/apply-model-empirical_{target}_{training}.py.ipynb"
+    notebook: "notebooks/inference/apply-model.py.ipynb"
 
 
 rule fit_model:
@@ -36,7 +57,7 @@ rule fit_model:
         epochs = config["epochs_for_model_training"]
     conda: "envs/ml.yaml"
     benchmark: "benchmarks/inference/fit-neural-network_{target}_{training}.tsv"
-    log: "notebook-logs/inference/fit-neural-network_{target}_{training}.py.ipynb"
+    log: "logs/inference/fit-neural-network_{target}_{training}.py.ipynb"
     notebook: "notebooks/inference/fit-neural-network.py.ipynb"
 
 
@@ -91,5 +112,5 @@ rule combine_simulation_tasks:
         logdata  = "output/simulation-data/{sim}/logdata.tar"
     conda: "envs/simulate.yaml"
     benchmark: "benchmarks/inference/combine-simulations_{sim}.tsv"
-    log: "notebook-logs/inference/combine-simulations_{sim}.py.ipynb"
+    log: "logs/inference/combine-simulations_{sim}.py.ipynb"
     notebook: "notebooks/inference/combine-simulations.py.ipynb"
