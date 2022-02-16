@@ -115,4 +115,221 @@ CLOSED: [2022-01-20 Thu 17:31]
 - [X] Confirm simulations ran okay
 - [X] Download simulations locally, to same directory as I did with Drosophila
 
-  
+*** 2022-01-24 Monday
+**** DONE Better Turkana SFS [11/11]
+CLOSED: [2022-01-24 Mon 17:28]
+:PROPERTIES:
+:ARCHIVE_TIME: 2022-02-14 Mon 09:52
+:ARCHIVE_FILE: ~/pessoal/essencial/agenda.org
+:ARCHIVE_CATEGORY: PhD
+:ARCHIVE_TODO: DONE
+:ARCHIVE_ITAGS: project
+:ARCHIVE_OLPATH: PhD/Turkana selection/Turkana simple power analysis
+:END:
+
+- State "DONE"       from "DOING"      [2022-01-24 Mon 17:28]
+- State "DOING"      from "TODO"       [2022-01-24 Mon 13:38]
+- Are there batch effects in the intermediate peaks? Those intermediate peaks are worrying.
+- Is there exponential growth?
+- We don't expect a lot of sequencing errors in the excess of singletons; technology is pretty alright these days with that.
+- Excess of high-freq. derived: misidentification of ancestral state?
+- [X] Look up neutral expectation for folded spectrum. Philipp's lecture notes?
+- [X] Rewrite SFS code to plot folded and unfolded in the same plot.
+- [X] x-axis is allele frequency.
+- [X] Add neutral expectation as a dashed black line.
+- [X] Plot again, with better y-axis.
+- [X] Re-name column of SFS data with =num_alternate=.
+- [X] Re-plot a folded SFS.
+- [X] We can use Fu (1995) to get the expected folded SFS under neutrality. Estimate \theta first from the first class of data, then see how it decays. Need to work it out on paper: what's \eta_i/\eta_1?
+- [X] Plot a scaled, folded SFS.
+- [X] Are there still weird peaks?
+- [X] E-mail Philipp.
+
+*** 2022-01-25 Tuesday
+**** DONE Plan next steps of Turkana simulation [3/3]            :network:
+CLOSED: [2022-01-25 Tue 15:35]
+:PROPERTIES:
+:ARCHIVE_TIME: 2022-02-14 Mon 09:52
+:ARCHIVE_FILE: ~/pessoal/essencial/agenda.org
+:ARCHIVE_CATEGORY: PhD
+:ARCHIVE_TODO: DONE
+:ARCHIVE_ITAGS: project
+:ARCHIVE_OLPATH: PhD/Turkana selection/Turkana simple power analysis
+:END:
+
+- State "DONE"       from "DOING"      [2022-01-25 Tue 15:35]
+- State "DOING"      from "TODO"       [2022-01-25 Tue 15:17]
+- [X] Look up the spelling of Julien's name
+- [X] How to do recapitation with custom coalescence?
+- [X] Reply to Philipp's email.
+
+*** 2022-01-27 Thursday
+**** DONE Simulate Turkana with demography [27/27]
+CLOSED: [2022-01-27 Thu 13:30]
+:PROPERTIES:
+:ARCHIVE_TIME: 2022-02-14 Mon 09:52
+:ARCHIVE_FILE: ~/pessoal/essencial/agenda.org
+:ARCHIVE_CATEGORY: PhD
+:ARCHIVE_TODO: DONE
+:ARCHIVE_ITAGS: project
+:ARCHIVE_OLPATH: PhD/Turkana selection/Turkana simple power analysis
+:END:
+
+- State "DONE"       from "DOING"      [2022-01-27 Thu 13:30]
+- State "DOING"      from "DONE"       [2022-01-27 Thu 13:27]
+- State "DONE"       from "DOING"      [2022-01-26 Wed 17:08]
+- State "DOING"      from "TODO"       [2022-01-25 Tue 15:44]
+- [X] Do pi and SNP limit in 100kb empirical windows for feature normalization.
+- [X] Implement demographic model in recapitation.
+  - [X] Look up how =msprime= measures time.
+  - [X] Write up a =demography= object with the correct parameters. Put it in the recapitation script.
+  - [X] Double-check how to add demography to recapitation.
+  - [X] Turn everything into parameters.
+  - [X] Confirm parameters from document we have.
+  - [X] Recapitate with that demography.
+- [X] Update local parameters:
+  - [X] Increase smallest window size to 10kb, and/or change number of windows from 21 to 11.
+  - [X] Keep mutation and recombination rates at 1e-8.
+  - [X] Pi normalization limit: 0.0025, kind of ad hoc based on 10kb empirical windows. Change it to 0.003, probably.
+  - [X] SNP limit for normalization is at 200, changed to 500.
+- [X] Change current population size to 30,000.
+- [X] Test run simulations locally.
+- [X] Add rule to compress .ms files.
+  - [X] Function to get the inputs.
+  - [X] Rule itself, based on the features one.
+  - [X] Add requirement to the =all= rule.
+- [X] Save those compressed files on the cluster.
+- [X] Test it locally. (How long to compress ms?)
+- [X] Make sure you can untar the ms
+- [X] Git update locally and on cluster.
+- [X] Clear folder of SLURM outputs on the cluster.
+- [X] Send simulations out to the cluster.
+- [X] Update git locally and on the cluster.
+- [X] Re-send simulations to the cluster with 13 dimensions instead of 11.
+
+*** 2022-01-29 Saturday
+**** DONE Contact Amanda and Julien about the SFS [2/2]
+CLOSED: [2022-01-29 Sat 10:15]
+:PROPERTIES:
+:ARCHIVE_TIME: 2022-02-14 Mon 09:52
+:ARCHIVE_FILE: ~/pessoal/essencial/agenda.org
+:ARCHIVE_CATEGORY: PhD
+:ARCHIVE_TODO: DONE
+:ARCHIVE_ITAGS: project
+:ARCHIVE_OLPATH: PhD/Turkana selection
+:END:
+
+- State "DONE"       from "DOING"      [2022-01-29 Sat 10:15]
+- State "DOING"      from "TODO"       [2022-01-28 Fri 14:14]
+Are you aware of this? It's not binning. Do you have an explanation of it? Otherwise, I just want to point out the observation.
+- [X] Write the email, ask Philipp about it
+- [X] Correct it based on Philipp's comments, send it out.
+
+Hi all,
+
+I wanted to bring to the group an observation about the Turkana site-frequency spectrum. I plotted it as a folded SFS with unbinned frequencies on the x-axis, and the y-axis is plotted in relation to the expected neutral folded SFS. The empirical data has a conspicuous excess of variants with minor allele frequency around 46/220 samples and at frequency 108/220. I wanted to know if you had seen this pattern in the data before and if you have an idea of what could be causing it...
+
+Best wishes,
+Ian
+
+***** DONE Perform simple Turkana power analysis [14/14]
+CLOSED: [2022-01-28 Fri 12:19]
+- State "DONE"       from "DOING"      [2022-01-28 Fri 12:19]
+- State "DOING"      from "TODO"       [2022-01-27 Thu 11:44]
+- [X] Wait for simulations to finish running.
+- [X] Download simulations.
+- [X] Copy deep learning notebooks from the /Drosophila/ repo.
+- [X] Update snakefile rules for machine learning.
+- [X] Update config file for machine learning.
+- [X] Add conda env for machine learning.
+- [X] Run all the rules, adding the scripts and notebooks as necessary.
+- [X] Debug neural network dimension mismatch
+- [X] Run snakemake, train models.
+- [X] Look at the data info: does it make sense?
+- [X] Re-run with 25 epochs of training.
+- [X] Look at the fitting report of selection strength. We want good performance.
+- [X] Git update.
+- [X] Do a janky R notebook to plot the train/valid true vs. predicted selection strength.
+
+** 2022-02 February
+
+*** 2022-02-01 Tuesday
+**** DONE Turkana better simulations parameters [18/18]
+CLOSED: [2022-02-01 Tue 14:40]
+:PROPERTIES:
+:ARCHIVE_TIME: 2022-02-14 Mon 09:52
+:ARCHIVE_FILE: ~/pessoal/essencial/agenda.org
+:ARCHIVE_CATEGORY: PhD
+:ARCHIVE_TODO: DONE
+:ARCHIVE_ITAGS: project
+:ARCHIVE_OLPATH: PhD/Turkana selection/Turkana power analysis of ongoing sweep models
+:END:
+- State "DONE"       from "DOING"      [2022-02-01 Tue 14:40]
+- State "DOING"      from "TODO"       [2022-02-01 Tue 12:13]
+- State "SOON"       from              [2022-01-31 Mon 18:13]
+- [X] Look up how to calculate \pi from the SFS in Philipp's lecture notes.
+- [X] Derive \pi from the empirical SFS we have.
+  - [X] Make a rule in data preparation with inputs and outputs.
+  - [X] Make a vector of h_k per SFS entry.
+  - [X] Multiply that by the counts of each SFS entry.
+  - [X] Divide that by the total genome size of 3x10^9.
+  - [X] Email Philipp asking if dividing by 3x10^9 is the right number.
+- [X] Use N_e = 30,000 and derive \mu from that empirical \pi. Recombination rate then should be equal to \pi so \pi/r = 1.
+- [X] RNM parameters: \theta_A can go from 0.1 (0.01?) to 5, or something like that.
+- [X] SGV parameters: f_0 can go from 2/2Ne to 5% (10%? If it's feasible).
+- [X] Recapitation demography needs to happen 7000 - (sweep time) generations ago. This matters for slow sweeps.
+- [X] Record sweep origin generation to compute sweep age.
+  - [X] SGV suggestion: generation where the allele became adaptive.
+  - [X] RNM suggestion: age of the oldest mutation.
+- [X] Test it all locally.
+- [X] Git update.
+- [X] Empty cluster directory of slurm outputs.
+- [X] Send simulations to the cluster.
+
+*** 2022-02-03 Thursday
+**** DONE Plot SFS of simulated neutral demographic model [10/10]
+CLOSED: [2022-02-03 Thu 16:23]
+:PROPERTIES:
+:ARCHIVE_TIME: 2022-02-14 Mon 09:52
+:ARCHIVE_FILE: ~/pessoal/essencial/agenda.org
+:ARCHIVE_CATEGORY: PhD
+:ARCHIVE_TODO: DONE
+:ARCHIVE_ITAGS: project
+:ARCHIVE_OLPATH: PhD/Turkana selection/Turkana power analysis of ongoing sweep models
+:END:
+- State "DONE"       from "DOING"      [2022-02-03 Thu 16:23]
+- State "DOING"      from "SOON"       [2022-02-03 Thu 14:59]
+- State "SOON"       from "TODO"       [2022-01-31 Mon 21:52]
+- State "DOING"      from "TODO"       [2022-01-31 Mon 21:50]
+- [X] Make rule and notebook to extract SFS in Python
+- [X] Number of neutral simulations to use is a parameter
+- [X] Wait for /neutral/ simulations to finish running on the cluster.
+- [X] Download simulations
+- [X] Use =tarfile= to extract the .ms files
+- [X] Look up in the previous notebooks how to best read in genotype data from an .ms file
+- [X] The neutral SFS can be obtained with a simple =Counter=, I am pretty sure
+- [X] Adjust notebook of plotting SFS to also plot the neutral simulated one (adjust rule input too)
+- [X] We expect neutral SFS to have an excess of neutral variants, but not as much excess as the genome-wide empirical data
+- [X] Git update
+
+**** DONE Turkana machine learning models [7/7]
+CLOSED: [2022-02-03 Thu 18:13]
+:PROPERTIES:
+:ARCHIVE_TIME: 2022-02-14 Mon 09:52
+:ARCHIVE_FILE: ~/pessoal/essencial/agenda.org
+:ARCHIVE_CATEGORY: PhD
+:ARCHIVE_TODO: DONE
+:ARCHIVE_ITAGS: project
+:ARCHIVE_OLPATH: PhD/Turkana selection/Turkana power analysis of ongoing sweep models
+:END:
+- State "DONE"       from "DOING"      [2022-02-03 Thu 18:13]
+- State "DOING"      from "SOON"       [2022-02-03 Thu 16:53]
+- State "SOON"       from              [2022-01-31 Mon 18:13]
+  - [X] Acquire empirical windows.
+  - [X] Run model training with 1 epoch to test.
+  - [X] Consolidate data, check how many sweeps we're training on.
+  - [X] Implement rules for all 4 targets.
+  - [X] Run model training with 25 epochs.
+  - [X] What is the power we get?
+  - [X] What are the inference results on the empirical data?
+

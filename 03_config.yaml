@@ -1,8 +1,11 @@
 
 raw_sweep_region_vcf: "raw-data/20211130_sweep-region/high_cov.SNP1.hg19_chr8.phased_STC1.vcf.recode.vcf"
 
-stats_file_location: "resources/normalization-stats.tsv"
+sweep_chromosome: 8
+sweep_region_start: 23350029 
+sweep_region_end: 24424864
 
+stats_file_location: "resources/normalization-stats.tsv"
 
 raw_sim_folder: "raw-simulations/20220203_simulations"
 epochs_for_model_training: 50

@@ -8,7 +8,17 @@ rule all:
                kb=[1, 10, 100]),
         "output/empirical-statistics/simulation-parameter-estimates.txt",
         "output/empirical-windows/data.tar",
-        "output/empirical-windows/logdata.tar"
+        "output/empirical-windows/logdata.tar",
+        "output/empirical-statistics/recombination-at-sweep.tsv",
+        "output/empirical-statistics/recombination-at-chromosome-8.tsv"
+
+rule recombination_at_sweep_region:
+    input: "raw-data/20220216_recombination-maps/maps_chr.8"
+    output:
+        recombination_at_sweep = "output/empirical-statistics/recombination-at-sweep.tsv",
+        chromosome_recombinations = "output/empirical-statistics/recombination-at-chromosome-8.tsv"
+    conda: "envs/simulate.yaml"
+    notebook: "notebooks/prepare-data/recombination.py.ipynb"
 
 rule compress_empirical_log_features:
     input: "output/empirical-windows/npy-log-scale/sweep.npy"

@@ -3,7 +3,17 @@ configfile: "03_config.yaml"
 
 rule all:
     input:
-        "fig/sfs.pdf"
+        "fig/sfs.pdf",
+        "fig/recombination-rates.pdf"
+
+rule plot_recombination_rates:
+    input:
+        sweep = "output/empirical-statistics/recombination-at-sweep.tsv",
+        chrom = "output/empirical-statistics/recombination-at-chromosome-8.tsv"
+    output:
+        "fig/recombination-rates.pdf"
+    conda: "envs/r.yaml"
+    notebook: "notebooks/plot/recombination-rates.r.ipynb"
 
 rule plot_sfs:
     input:
