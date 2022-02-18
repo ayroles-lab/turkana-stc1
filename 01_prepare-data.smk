@@ -10,9 +10,9 @@ rule all:
         "output/empirical-windows/data.tar",
         "output/empirical-windows/logdata.tar",
         "output/empirical-statistics/recombination-at-sweep.tsv",
-        "output/empirical-statistics/recombination-at-chromosome-8.tsv"
+        "output/empirical-statistics/recombination-at-chromosome-8.tsv",
 
-rule recombination_at_sweep_region:
+rule recombination_rates:
     input: "raw-data/20220216_recombination-maps/maps_chr.8"
     output:
         recombination_at_sweep = "output/empirical-statistics/recombination-at-sweep.tsv",
