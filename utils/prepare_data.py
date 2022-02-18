@@ -20,6 +20,13 @@ def add_regime_kind_column(df):
     return results
 
 
+def add_sweep_age_column(df):
+    age = df.slim_generations.copy()
+    age.loc[df.sweep_mode == "sgv (true)"] = age - df.sgv_selection_generation
+    results = df.assign(sweep_age = age)
+    return results
+
+
 def balance_hard_vs_soft(df, seed=None):
     results = add_regime_kind_column(df)
     results = results.groupby("regime_kind").sample(
@@ -36,11 +43,26 @@ def balance_rnm_vs_sgv(df, seed=None):
     return results
 
 
+def balance_sgv_f0(df, seed=None):
+    return df.loc[df.sweep_mode == "sgv (true)"]
+
+
+def balance_rnm_num_mutations(df, seed=None):
+    return df.loc[df.sweep_mode == "rnm (true)"]
+
+
+def balance_sweep_age(df, seed=None):
+    return add_sweep_age_column(df)
+
+
 balancing_functions = {
     "log-sel-strength": None,
     "sweep-mode": None,
     "hard-vs-soft": balance_hard_vs_soft,
     "rnm-vs-sgv": balance_rnm_vs_sgv,
+    "sweep-age": balance_sweep_age,
+    "sgv-f0": balance_sgv_f0,
+    "rnm-num-mutations": balance_rnm_num_mutations,
 }
 
 # The actual columns in the DataFrames corresponding to the true labels for each inference target.
@@ -49,4 +71,7 @@ target_columns = {
     "sweep-mode": "sweep_mode",
     "hard-vs-soft": "regime_kind",
     "rnm-vs-sgv": "sweep_mode",
+    "sweep-age": "sweep_age",
+    "sgv-f0": "actual_frequency_at_selection",
+    "rnm-num-mutations": "sample_num_adaptive_copies",
 }
