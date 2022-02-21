@@ -50,10 +50,6 @@ if params["regime"] == "rnm":
     s = params["selection-coefficient"]
     position = params["selection-coordinate"]
     window = params["selection-region-size"]
-    # We have to set the dominance coefficient to match the selection coefficient, in case
-    # an individual gets two separate mutations in their two genomes. Check section 10.5.1
-    # of the SLiM Manual for details.
-    replacements["DOMINANCE_COEFFICIENT"] = (np.sqrt(1 + s) - 1) / s
     # Coordinates of adaptive region for SLiM breakpoints of adaptive mutation rate.
     replacements["END_NEUTRAL_REGION"] = int(position - max(window // 2, 1))
     replacements["END_ADAPTIVE_REGION"] = int(position + window // 2)

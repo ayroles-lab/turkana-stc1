@@ -97,3 +97,19 @@ function (void)finalize_sim(void) {
     writeFile(metrics_output, records, append=T);
     sim.simulationFinished();
 }
+
+fitness(m1) {
+    // If individual has more than one mutation object of the same type,
+    // use a special dominance coefficient that resolves to 1 + s.
+    // See 9.5.1 of SLiM manual for version 3.7 for details.
+    // This ONLY MAKES SENSE RIGHT NOW if all these possibly unique m1 mutations are guaranteed to be in the same position.
+    this_s = mut.selectionCoeff;
+    if (length(individual.uniqueMutationsOfType(m1)) > 1) {
+	fake_h = (sqrt(1 + this_s) - 1)/this_s;
+	result = 1.0 + fake_h*this_s;
+    // If there is only one copy of the mutation, use its dominance coefficient.
+    } else {
+	result = 1.0 + mut.mutationType.dominanceCoeff * this_s;
+    }
+    return result;
+}
