@@ -20,3 +20,6 @@ inference_targets:
   - sweep-mode
   - hard-vs-soft
   - rnm-vs-sgv
+  - sweep-age
+  - sgv-f0
+  - rnm-num-mutations
