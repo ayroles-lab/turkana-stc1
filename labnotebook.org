@@ -333,3 +333,171 @@ CLOSED: [2022-02-03 Thu 18:13]
   - [X] What is the power we get?
   - [X] What are the inference results on the empirical data?
 
+*** 2022-02-18 Friday
+**** DONE Turkana, further prediction models [4/4]
+CLOSED: [2022-02-18 Fri 15:45] DEADLINE: <2022-02-18 Fri>
+:PROPERTIES:
+:ARCHIVE_TIME: 2022-03-03 Thu 18:25
+:ARCHIVE_FILE: ~/pessoal/essencial/agenda.org
+:ARCHIVE_CATEGORY: PhD
+:ARCHIVE_TODO: DONE
+:ARCHIVE_OLPATH: PhD/Turkana selection
+:END:
+
+- State "DONE"       from              [2022-02-18 Fri 15:45]
+***** DONE Turkana simulations [15/15]
+CLOSED: [2022-02-16 Wed 22:48]
+- State "DONE"       from "DOING"      [2022-02-16 Wed 22:48]
+- State "DOING"      from "TODO"       [2022-02-14 Mon 15:52]
+- Better recombination rate, maybe there's a good estimate from a different population out there. A genome browser or HapMap or something else - ask someone about the state of the art for human recombination rate?
+- 10,000 copies of each simulation mode. Circa 60% of SGV and RNM simulations will succeed in total, so run 20,000 of them.
+- [X] Ask someone about state-of-the-art human recombination rate estimates.
+- [X] Find a recombination rate for our region: chromosome 8, the STC1 coordinates.
+- [X] Add a source website for the recombination map
+- [X] Make rule to get recombination rate
+- [X] Open notebook from rule
+- [X] Get coordinates of the window of interest: chr. 8; 23,350,029 - 24,424,864.
+- [X] How to derive recombination rate from the maps?
+- [X] Get one rate for each map
+- [X] Plot for recombination across chromosome 8, add a line indicating where the region is.
+- [X] Confirm: what mu/r does it produce?
+- [X] Test run simulations locally with those parameters to see how they benchmark and how that compares to previous parameters.
+- [X] Set up cluster scripts to run 20,000 simulations of SGV and RNM, and 10,000 hard sweeps, and 1,000 neutral simulations.
+- [X] Ask Elissa about the limitation of 10,000 array jobs and slurm error I was getting: =sbatch: error: Slurm temporarily unable to accept job, sleeping and retrying=.
+- [X] Change script to send only 5000 simulations of each kind.
+- [X] Update git and run all.
+  
+***** DONE Turkana results with higher recombination rate
+CLOSED: [2022-02-17 Thu 21:39]
+- State "DONE"       from "DOING"      [2022-02-17 Thu 21:39]
+- State "DOING"      from "DONE"       [2022-02-17 Thu 21:33]
+- [X] Figure out units of the recombination maps
+- [X] Correct units in notebook.
+- [X] Produce a fine-scale map, too. Add that to the same table.
+- [X] We want a fine scale plot to see hotspots of ~1kb
+- [X] A larger scale map to see if the sweep 1Mb is an outlier among other 1Mb regions
+- [X] Delete simulations with higher recombination
+- [X] Send out more simulations, in batches of 1000 each.
+  
+***** DONE Turkana machine learning targets [18/18]
+CLOSED: [2022-02-17 Thu 22:15]
+
+- State "DONE"       from "TODO"       [2022-02-17 Thu 22:15]
+- State "SOON"       from              [2022-02-07 Mon 10:59]
+- Philipp's idea is to infer sweep mode first (with possibilities of the various patial sweep models) and then tailor the simulation parameters for training of the next models using only sweeps of the inferred mode. We should have a lot of power for everything since the partial sweep frequency is circa 80%.
+- [X] What do I need to predict a new target? Write it down here as a todo for the following targets:
+- [X] Predict SGV initial frequency without worrying about partial sweep models yet! The hope is that we're not getting to top end of our f_0 prior (currently 10%).
+  - [X] Add target to config
+  - [X] Target column in =utils.prepare_data=
+  - [X] Balancing function in =utils.prepare_data=
+- [X] What is the sweep age?
+  - [X] Add target to config
+  - [X] Target column in =utils.prepare_data=
+  - [X] Balancing function in =utils.prepare_data=
+  - [X] Target column in model application notebook
+- [X] Infer # of adaptive alleles contributing to fixation for RNM sweep.
+  - [X] Add target to config
+  - [X] Target column in =utils.prepare_data=
+  - [X] Balancing function in =utils.prepare_data=
+- [X] Run everything with =-n=; do all the targets work?
+- [X] Fit all models with 1 epoch.
+- [X] Git update.
+- [X] Fit all models with 50 epochs.
+  
+***** DONE Turn Philipp's ideas into more Turkana to-do's
+CLOSED: [2022-02-18 Fri 15:18]
+
+- State "DONE"       from "DOING"      [2022-02-18 Fri 15:18]
+- State "DOING"      from "TODO"       [2022-02-18 Fri 11:38]
+- [X] Update PhD plan with the new Turkana timeline.
+- [X] Reply to Amanda.
+- We've been using the demog. inferences from the analysis, and that's worked well for us so far. Should we not be using them? Is the demographic analysis still part of the project?
+
+** 2022-03 March
+
+*** 2022-03-03 Thursday
+**** Project description
+:PROPERTIES:
+:ARCHIVE_TIME: 2022-03-03 Thu 18:25
+:ARCHIVE_FILE: ~/pessoal/essencial/agenda.org
+:ARCHIVE_CATEGORY: PhD
+:ARCHIVE_OLPATH: PhD/Turkana selection/Meetings
+:END:
+
+- Paper is a story about adaptation to desert living and dehydration with the STC1 locus.
+- The locus is also "super pleiotropic".
+- Paper will introduce entire dataset of 301 Turkana genomes.
+- Original purpose of the first 100 high-quality Turkana genomes was to compare cultural diverstiy with genetic diversity (cultural F_ST vs. genetic F_ST), but that won't go in this paper. Another group is working on it.
+- Paper includes selection scan, functional validation, and hopefully some inferences about the mode and strength of selection. That's where we come in.
+- The sweep in STC1 with circa 80% frequency.
+- What is selection strength?
+- Is the sweep hard or soft? This is an interesting question.
+- Estimate sweep age if it's straightforward, but not necessary if it's a lot of trouble. I think it's a lot of trouble because it'd require assuming some model for a sweep that's both incomplete and old.
+- The candidate region for the sweep is around 50kb, and we can try some different 50kb windows and see if results are different.
+- Out timeline is weeks to months.
+- What demographic model to simulate? Try equilibrium first. They have a two-epoch expansion model fit with dadi, with N_e of 15,000 and 30,000.
+- Those population sizes are great because they don't require rescaling.
+- Get \pi and SNP density from the neutral regions of the genome.
+- Full genome is not available because of data ethics reasons, but all we need are the summary statistics.
+- We can start with either equilibrium or the 2-epoch model, \mu and standard human recombination map from litetature. Does it fit the \pi and SNP density of the data?
+- Simulate a region of 1 Mb. This VCF with the candidate selected regions of interest is available to us.
+- Train models, then apply to the STC1 region.
+- Support conclusions with some other evidence. Especially if we say it's a soft sweep.
+- If it's a simple application of my method, probably not a thesis chapter. If I go above and beyond, it might be.
+
+**** Meeting [2021-11-11 Thu 10:30]
+:PROPERTIES:
+:ARCHIVE_TIME: 2022-03-03 Thu 18:25
+:ARCHIVE_FILE: ~/pessoal/essencial/agenda.org
+:ARCHIVE_CATEGORY: PhD
+:ARCHIVE_OLPATH: PhD/Turkana selection/Meetings
+:END:
+
+- Sweep in STC1 with circa 80% frequency.
+- What is selection strength?
+- Is the sweep hard or soft?
+- Estimate sweep age if it's straightforward, but not necessary if it's a lot of trouble. I think it's a lot of trouble because it'd require assuming some model for a sweep that's both incomplete and old.
+- Region is around 50kb, and we can try some different 50kb windows and see if results are different.
+- Timeline: weeks to months.
+- Paper is a selection story with scan, functional validation, and hopefully some inferences about the mode and strength of selection. That's where we come in.
+- Paper about the specific STC1 locus for desert/dehydration adaptation. But also super pleiotropic.
+- Paper will introduce entire dataset of 301 genomes.
+- No cultural evolution, which was the original purpose of the first 100 high-quality genomes.
+  
+  
+
+
+
+**** Discussion with Philipp [2021-11-05 Fri]
+:PROPERTIES:
+:ARCHIVE_TIME: 2022-03-03 Thu 18:25
+:ARCHIVE_FILE: ~/pessoal/essencial/agenda.org
+:ARCHIVE_CATEGORY: PhD
+:ARCHIVE_OLPATH: PhD/Turkana selection/Meetings
+:END:
+
+They want to do more sweep analysis on a single strong sweep candidate. They're primarily interested in the timing of it. But we can do sel. strength and sweep mode. Especially if we can show it's a likely soft sweep, from SGV or RNM.
+
+Our job:
+- Simulate.
+  - What demographic model?
+  - Any other human-specific simulation challenges?
+  - As a first step, doing equilibrium demography and constant size is a good idea.
+  - Try to fit pi.
+  - Try to fir \mu/r.
+  - Maybe we don't even need to rescale, since they have N_e = 10,000.
+  - We can use recombination rates specific to the region. Use other populations as reference. Is it a uniform recombination rate? How much variation is there in local rec. rate in a region of circa 1Mb?
+  - There's a chance they have a recombination map for their population, but that'd be biased because there's this strong sweep signal in the middle increasing LD.
+  - What's the variation in rec. rate between African populations?
+  - Do you see this sweep in other human populations?
+- Train.
+  - What machine learning model?
+- Apply.
+  - Support conclusions with some other evidence. Especially if we say it's a soft sweep.
+
+Concerns:
+- If it's a simple application of my method, probably not a thesis chapter. If I go above and beyond, it might be.
+- What are their time constraints? Are they in a super hurry?
+- What happened to Melissa Wilson that simulating Turkana in SLiM didn't work?
+
+
