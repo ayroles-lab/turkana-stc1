@@ -19,20 +19,28 @@ rule all:
             target=config["inference_targets"],
             training=config["training_ids"]
         ),
-        s_estimate = "output/inferences-s-other-methods/messerneher2012.html"
+        s_estimate = "output/inferences-s-other-methods/messerneher2012-estimate.txt",
+        s_esimate_notebook = "output/inferences-s-other-methods/messerneher2012.html"
+
+
+rule convert_messer_neher_notebook:
+    input: "output/inferences-s-other-methods/messerneher2012.ipynb"
+    output: "output/inferences-s-other-methods/messerneher2012.html"
+    conda: "envs/simulate.yaml"
+    shell: "jupyter nbconvert --to html {input}"
 
 
 rule infer_s_messer_neher_2012:
     input:
-        sweep_012 = "output/empirical-windows/genotypes/sweep.012",
-        sweep_012_pos = "output/empirical-windows/genotypes/sweep.012.pos"
+        ms = "output/empirical-windows/ms/sweep.ms",
     output:
-        ms_file = temp("output/inferences-s-other-methods/sweep.ms"),
-        estimate = "output/inferences-s-other-methods/messerneher2012.html"
+        estimate = "output/inferences-s-other-methods/messerneher2012-estimate.txt",
+        notebook="output/inferences-s-other-methods/messerneher2012.ipynb"
     params:
         mut_rate = 1.083e-8,
         rec_rate = 1.083e-8
     conda: "envs/simulate.yaml"
+    log: notebook="output/inferences-s-other-methods/messerneher2012.ipynb"
     notebook: "notebooks/inference/estimate-s-messer-neher-2012.py.ipynb"
 
 
