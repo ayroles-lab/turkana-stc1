@@ -28,6 +28,7 @@ rule compress_empirical_log_features:
     shell:
         "tar -czf {output} {params.npy_dir} ;"
 
+
 rule compress_empirical_features:
     input: "output/empirical-windows/npy/sweep.npy"
     output: 'output/empirical-windows/data.tar'
@@ -36,15 +37,15 @@ rule compress_empirical_features:
     shell:
         "tar -czf {output} {params.npy_dir} ;"
 
+
 rule empirical_window_features:
     input:
-        genotypes = 'output/empirical-windows/genotypes/{window}.012',
+        ms = 'output/empirical-windows/ms/{window}.ms',
         normalization_stats = config['stats_file_location']
     output:
         npy = 'output/empirical-windows/npy/{window}.npy',
         log_npy = 'output/empirical-windows/npy-log-scale/{window}.npy',
-        ms = temp('output/empirical-windows/ms/{window}.ms'),
-        features = temp('output/empirical-windows/features/{window}.tsv'),
+        features = 'output/empirical-windows/features/{window}.tsv',
         stats = 'output/empirical-windows/features/{window}-stats.tsv',
     params:
         first_position_in_vcf = 23350029,
@@ -52,20 +53,15 @@ rule empirical_window_features:
     conda: 'envs/simulate.yaml'
     notebook: 'notebooks/prepare-data/empirical-window-features.py.ipynb'
 
-rule empirical_window_012:
+
+rule empirical_window_ms:
     input:
         data = config["raw_sweep_region_vcf"]
     output:
-        'output/empirical-windows/genotypes/sweep.012'
-    params:
-        outdir = 'output/empirical-windows/genotypes/sweep'
+        ms = 'output/empirical-windows/ms/sweep.ms'
     conda: 'envs/simulate.yaml'
-    shell: "vcftools "
-           "--vcf {input} "
-           "--mac 1 "
-           "--012 "
-           "--out {params.outdir} "
-           "2>/dev/null"
+    script: 'scripts/prepare-data/vcf-to-ms.py'
+
 
 rule estimate_simulation_parameters:
     input: "output/empirical-statistics/sfs.tsv"

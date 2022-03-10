@@ -29,7 +29,7 @@ smallest_window = 10000
 default_simulation_parameters = {
     # Biology
     "locus-size": locus_size,
-    "sample-size": 220,
+    "sample-size": 216,
     # SLiM options
     "last-generation": 5000,
     "simplification-interval": 500,

@@ -18,7 +18,22 @@ rule all:
             "output/inferences-empirical/summaries/{target}_{training}.tsv",
             target=config["inference_targets"],
             training=config["training_ids"]
-        )
+        ),
+        s_estimate = "output/inferences-s-other-methods/messerneher2012.html"
+
+
+rule infer_s_messer_neher_2012:
+    input:
+        sweep_012 = "output/empirical-windows/genotypes/sweep.012",
+        sweep_012_pos = "output/empirical-windows/genotypes/sweep.012.pos"
+    output:
+        ms_file = temp("output/inferences-s-other-methods/sweep.ms"),
+        estimate = "output/inferences-s-other-methods/messerneher2012.html"
+    params:
+        mut_rate = 1.083e-8,
+        rec_rate = 1.083e-8
+    conda: "envs/simulate.yaml"
+    notebook: "notebooks/inference/estimate-s-messer-neher-2012.py.ipynb"
 
 
 rule replicate_empirical_inferences_table:

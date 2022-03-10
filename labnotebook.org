@@ -413,6 +413,35 @@ CLOSED: [2022-02-18 Fri 15:18]
 - [X] Reply to Amanda.
 - We've been using the demog. inferences from the analysis, and that's worked well for us so far. Should we not be using them? Is the demographic analysis still part of the project?
 
+*** 2022-02-21 Monday
+**** DONE Turkana sanity simulations
+CLOSED: [2022-02-21 Mon 15:51]
+:PROPERTIES:
+:ARCHIVE_TIME: 2022-03-09 Wed 12:27
+:ARCHIVE_FILE: ~/pessoal/essencial/agenda.org
+:ARCHIVE_CATEGORY: PhD
+:ARCHIVE_TODO: DONE
+:ARCHIVE_OLPATH: PhD/Turkana project/Turkana, more confident predictions
+:END:
+- State "DONE"       from "DOING"      [2022-02-21 Mon 15:51]
+- State "DOING"      from "SOON"       [2022-02-21 Mon 14:34]
+- State "SOON"       from              [2022-02-21 Mon 11:52]
+- [X] Git pull locally.
+- [X] Prepare simulations with dimension=21 to see if that makes a difference.
+- [X] What needs to change about RNM sweep dominance?
+- [X] Prepare simulations with h=1, it will be a robustness test.
+  - [X] Run local simulations to generate SLiM scripts.
+  - [X] Use the specified dominance coefficient.
+  - [X] Callback: if the other genome doesn't have a mutation of same type, use the dominance coefficient.
+  - [X] It it does, use the special formula for h.
+  - [X] Try to debug this in slimgui somehow.
+  - [X] Change slim script template.
+  - [X] Change parameter instantiation script.
+- [X] Test run locally.
+- [X] Git update on the cluster.
+- [X] Send jobs out.
+  
+
 ** 2022-03 March
 
 *** 2022-03-03 Thursday
@@ -500,4 +529,61 @@ Concerns:
 - What are their time constraints? Are they in a super hurry?
 - What happened to Melissa Wilson that simulating Turkana in SLiM didn't work?
 
+*** 2022-03-07 Monday
+**** DONE Turkana with more simulated data [13/13]
+CLOSED: [2022-03-07 Mon 17:12]
+:PROPERTIES:
+:ARCHIVE_TIME: 2022-03-09 Wed 12:27
+:ARCHIVE_FILE: ~/pessoal/essencial/agenda.org
+:ARCHIVE_CATEGORY: PhD
+:ARCHIVE_TODO: DONE
+:ARCHIVE_OLPATH: PhD/Turkana project/Turkana, more confident predictions
+:END:
+- State "DONE"       from "DOING"      [2022-03-07 Mon 17:12]
+- State "DOING"      from "TODO"       [2022-03-04 Fri 18:12]
+- State "DOING"      from "DONE"       [2022-03-02 Wed 08:15]
+- State "DONE"       from "DOING"      [2022-03-01 Tue 23:58]
+- State "DOING"      from "TODO"       [2022-03-01 Tue 20:00]
+- State "SOON"       from              [2022-02-21 Mon 11:52]
+- [X] Download simulated data. (In progress.)
+- [X] Rename local simulations to =simple=.
+- [X] Add rule to make empirical inference replicates.
+- [X] Add notebook to make empirical inference replicates.
+- [X] Run with =-n= to make sure everything still works.
+- [X] Run everything with the new data and =-c8=.
+- [X] Git update.
+- [X] As it runs, check that the data reports match up. (Ready at 10:30?)
+- [X] Try with =-n= to see what the current jobs are.
+- [X] Implement replicates of everything, from the =all= rule down, using the same data.
+- [X] Try with =-n= to confirm the jobs.
+- [X] Run everything with 20,000 data points per sweep.
+- [X] Confirm Everything ran okay.
+
+*** 2022-03-08 Tuesday
+**** DONE Gather/plot results of Turkana replicate inferences [14/14]
+CLOSED: [2022-03-08 Tue 17:19]
+:PROPERTIES:
+:ARCHIVE_TIME: 2022-03-09 Wed 12:29
+:ARCHIVE_FILE: ~/pessoal/essencial/agenda.org
+:ARCHIVE_CATEGORY: PhD
+:ARCHIVE_TODO: DONE
+:ARCHIVE_OLPATH: PhD/Turkana project/Turkana further analyses
+:END:
+
+- State "DONE"       from "DOING"      [2022-03-08 Tue 17:19]
+- State "DOING"      from "TODO"       [2022-03-08 Tue 12:34]
+- [X] See if you can consolidate plotting and inference workfLows.
+- [X] Tables/summaries of empirical inferences.
+- [X] Copy rule from Drosophila.
+- [X] Adjust paths in new rule.
+- [X] Copy script/notebook from Drosophila.
+- [X] Adjust script/notebook as necessary.
+- [X] Make sure it works with =-n=.
+- [X] Run it.
+- [X] Check that results make sense.
+- [X] Save "statistics" files with an index.
+- [X] Move rule to the inference workflow.
+- [X] Move notebook to the inference folder.
+- [X] Re-run.
+- [X] Git update.
 

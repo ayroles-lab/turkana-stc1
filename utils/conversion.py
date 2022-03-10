@@ -2,6 +2,23 @@ from pathlib import Path
 
 import numpy as np
 
+import allel
+
+
+def vcf_to_ms(vcf_file, ms_file):
+    data = allel.read_vcf(vcf_file)
+    positions = data['variants/POS']
+    haps = data['calldata/GT']
+    haps = haps.reshape((haps.shape[0], haps.shape[1]*2)).T
+    with open(ms_file, "w") as out:
+        out.write(str(vcf_file) + "\n\n\n//\n")
+        out.write(f"segsites: {len(positions)}\n")
+        out.write(f"positions: {' '.join(str(i) for i in positions)}\n")
+        for sample_hap in haps:
+            out.write(
+                "".join(str(i) for i in sample_hap) + "\n"
+            )
+
 
 def vcftools_to_ms(input_file, output_file, pos_file=None):
     """Convert a .012 file (from vcftools) into an ms file.
