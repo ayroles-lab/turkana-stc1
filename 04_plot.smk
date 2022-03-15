@@ -4,7 +4,16 @@ configfile: "03_config.yaml"
 rule all:
     input:
         "fig/sfs.pdf",
-        "fig/recombination-rates.pdf"
+        "fig/recombination-rates.pdf",
+        "fig/sweepfinder.pdf"
+
+rule plot_sweepfinder:
+    input: "output/inferences-s-other-methods/sweepfinder2-results.tsv"
+    output: "fig/sweepfinder.pdf"
+    conda: "envs/r.yaml"
+    params:
+        popsize = 30000
+    notebook: "notebooks/plot/sweepfinder-results.r.ipynb"
 
 rule plot_recombination_rates:
     input:

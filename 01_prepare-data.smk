@@ -11,6 +11,18 @@ rule all:
         "output/empirical-windows/logdata.tar",
         "output/empirical-statistics/recombination-at-sweep.tsv",
         "output/empirical-statistics/recombination-at-chromosome-8.tsv",
+        "output/inferences-s-other-methods/sweepfinder/stc1-sweepfinder.tsv",
+        "output/inferences-s-other-methods/sweepfinder/turkana-sfs.tsv",
+
+rule sweepfinder_format_tables:
+    input:
+        vcf = config["raw_sweep_region_vcf"],
+        sfs = "output/empirical-statistics/sfs.tsv"
+    output:
+        data = "output/inferences-s-other-methods/sweepfinder/stc1-sweepfinder.tsv",
+        sfs = "output/inferences-s-other-methods/sweepfinder/turkana-sfs.tsv",
+    conda: "envs/simulate.yaml"
+    notebook: "notebooks/prepare-data/sweepfinder-format-conversion.py.ipynb"
 
 rule recombination_rates:
     input: "raw-data/20220216_recombination-maps/maps_chr.8"

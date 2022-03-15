@@ -20,7 +20,19 @@ rule all:
             training=config["training_ids"]
         ),
         s_estimate = "output/inferences-s-other-methods/messerneher2012-estimate.txt",
-        s_esimate_notebook = "output/inferences-s-other-methods/messerneher2012.html"
+        s_esimate_notebook = "output/inferences-s-other-methods/messerneher2012.html",
+        sweepfinder = "output/inferences-s-other-methods/sweepfinder2-results.tsv"
+
+
+rule sweepfinder2:
+    input:
+        data = "output/inferences-s-other-methods/sweepfinder-data/stc1-sweepfinder.tsv",
+        sfs = "output/inferences-s-other-methods/sweepfinder-data/turkana-sfs.tsv"
+    output: "output/inferences-s-other-methods/sweepfinder2-results.tsv"
+    log: "output/inferences-s-other-methods/sweepfinder-data/sweepfinder2.log"
+    params:
+        grid = config["sweepfinder_grid_number"]
+    shell: "bin/SweepFinder2 -l {params.grid} {input.data} {input.sfs} {output} &> {log}"
 
 
 rule convert_messer_neher_notebook:

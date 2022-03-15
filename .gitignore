@@ -8,6 +8,7 @@ logs
 output
 raw-data
 raw-simulations
+src
 
 .DS_Store
 .ipynb_checkpoints
