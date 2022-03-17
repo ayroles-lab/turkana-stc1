@@ -21,7 +21,21 @@ rule all:
         ),
         s_estimate = "output/inferences-s-other-methods/messerneher2012-estimate.txt",
         s_esimate_notebook = "output/inferences-s-other-methods/messerneher2012.html",
-        sweepfinder = "output/inferences-s-other-methods/sweepfinder2-results.tsv"
+        sweepfinder = "output/inferences-s-other-methods/sweepfinder2-results.tsv",
+        selection_scan = "output/selection-scan/selection-scan-features.tsv"
+
+
+rule selection_scan:
+    input:
+        ms = 'output/empirical-windows/ms/sweep.ms'
+    output:
+        features = 'output/selection-scan/selection-scan-features.tsv',
+        stats = 'output/selection-scan/selection-scan-features-stats.tsv'
+    params:
+        window_size = 20_000,
+        window_step = 10_000
+    conda: "envs/simulate.yaml"
+    notebook: "notebooks/inference/selection-scan.py.ipynb"
 
 
 rule sweepfinder2:

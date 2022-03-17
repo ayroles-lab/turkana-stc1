@@ -5,7 +5,15 @@ rule all:
     input:
         "fig/sfs.pdf",
         "fig/recombination-rates.pdf",
-        "fig/sweepfinder.pdf"
+        "fig/sweepfinder.pdf",
+        "fig/selection-scan.pdf"
+
+
+rule plot_selection_scan:
+    input: "output/selection-scan/selection-scan-features.tsv"
+    output: "fig/selection-scan.pdf"
+    conda: "envs/r.yaml"
+    notebook: "notebooks/plot/selection-scan.r.ipynb"
 
 rule plot_sweepfinder:
     input: "output/inferences-s-other-methods/sweepfinder2-results.tsv"

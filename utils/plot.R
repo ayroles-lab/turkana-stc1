@@ -52,3 +52,14 @@ sweepmode_factor_short <- function(mode) {
     result <- factor(result, levels=c('Hard', 'RNM', 'SGV', 'Soft'))
     return(result)
 }
+
+feat_factor <- function(v) {
+    result <- str_replace_all(v, c(
+        "pi"="Pi",
+        "num_snps"="# SNPs",
+        "num_haps"="# Haplotypes",
+        "taj_D"="Tajima's D"
+    ))
+    result <- factor(result, levels=c("Pi", "# SNPs", "# Haplotypes", "H1", "H12", "H2/H1", "Tajima's D"))
+    return(result)
+}
