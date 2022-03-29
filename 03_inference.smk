@@ -1,6 +1,10 @@
 
 configfile: '03_config.yaml'
 
+def relate_sites_of_interest():
+    with open("output/inferences-s-other-methods/clues/stc1-sites-of-interest.txt") as f:
+        return [int(line.strip()) for line in f]
+
 rule all:
     input:
         data_reports = expand(
@@ -22,8 +26,85 @@ rule all:
         s_estimate = "output/inferences-s-other-methods/messerneher2012-estimate.txt",
         s_esimate_notebook = "output/inferences-s-other-methods/messerneher2012.html",
         sweepfinder = "output/inferences-s-other-methods/sweepfinder2-results.tsv",
-        selection_scan = "output/selection-scan/selection-scan-features.tsv"
+        selection_scan = "output/selection-scan/selection-scan-features.tsv",
+        # TEMP
+        brlens = expand(
+            "output/inferences-s-other-methods/clues/branch-lengths/relate-brlens_{site}.timeb",
+            site=[23886711]
+        )
 
+
+rule relate_sample_branch_lengths:
+    input:
+        anc = "output/inferences-s-other-methods/clues/stc1-popsizes.anc",
+        mut = "output/inferences-s-other-methods/clues/stc1-popsizes.mut",
+        coal = "output/inferences-s-other-methods/clues/stc1-popsizes.coal"
+    output: "output/inferences-s-other-methods/clues/branch-lengths/relate-brlens_{site}.timeb"
+    params:
+        in_prefix = "output/inferences-s-other-methods/clues/stc1-popsizes",
+        out_prefix = "output/inferences-s-other-methods/clues/branch-lengths/relate-brlens_{site}",
+        mut_rate = 1.083e-8,
+        num_samples = 3
+    log: "output/inferences-s-other-methods/clues/branch-lengths/logs/relate-brlens_{site}.log"
+    shell:
+        "bin/relate/scripts/SampleBranchLengths/SampleBranchLengths.sh "
+        "-i {params.in_prefix} "
+        "-o {params.out_prefix} "
+        "-m {params.mut_rate} "
+        "--coal {input.coal} "
+        "--format b "
+        "--num_samples {params.num_samples} "
+        "--first_bp {wildcards.site} "
+        "--last_bp {wildcards.site} "
+        "--seed 13 &> {log}"
+
+
+rule relate_estimate_popsize:
+    input:
+        anc = "output/inferences-s-other-methods/clues/stc1-relate.anc",
+        mut = "output/inferences-s-other-methods/clues/stc1-relate.mut",
+        poplabels = "output/inferences-s-other-methods/clues/stc1-prepared.poplabels"
+    output:
+        anc = "output/inferences-s-other-methods/clues/stc1-popsizes.anc",
+        mut = "output/inferences-s-other-methods/clues/stc1-popsizes.mut",
+        coal = "output/inferences-s-other-methods/clues/stc1-popsizes.coal"
+    params:
+        in_prefix = "output/inferences-s-other-methods/clues/stc1-relate",
+        out_prefix = "output/inferences-s-other-methods/clues/stc1-popsizes",
+        mut_rate = 1.083e-8
+    log: "output/inferences-s-other-methods/clues/stc1-popsizes.log"
+    shell:
+        "bin/relate/scripts/EstimatePopulationSize/EstimatePopulationSize.sh "
+        "-i {params.in_prefix} "
+        "-m {params.mut_rate} "
+        "--poplabels {input.poplabels} "
+        "--seed 13 "
+        "-o {params.out_prefix} &> {log} ; "
+
+
+rule relate_run_all:
+    input:
+        haps = "output/inferences-s-other-methods/clues/stc1-prepared.haps",
+        sample = "output/inferences-s-other-methods/clues/stc1-prepared.sample",
+        rec_map = "output/inferences-s-other-methods/clues/recombination.map"
+    output:
+        anc = "output/inferences-s-other-methods/clues/stc1-relate.anc",
+        mut = "output/inferences-s-other-methods/clues/stc1-relate.mut"
+    params:
+        out_prefix = "stc1-relate",
+        mut_rate = 1.083e-8,
+        hap_pop_size = 60000
+    log: "output/inferences-s-other-methods/clues/relate-run-all.log"
+    shell: "cd output/inferences-s-other-methods/clues ; "
+           "../../../bin/relate/bin/Relate "
+           "--mode All "
+           "-m {params.mut_rate} "
+           "-N {params.hap_pop_size} "
+           "--haps stc1-prepared.haps "
+           "--sample stc1-prepared.sample "
+           "--map recombination.map "
+           "--seed 13 "
+           "-o {params.out_prefix} &> relate-run-all.log"
 
 rule selection_scan:
     input:

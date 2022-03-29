@@ -13,6 +13,53 @@ rule all:
         "output/empirical-statistics/recombination-at-chromosome-8.tsv",
         "output/inferences-s-other-methods/sweepfinder/stc1-sweepfinder.tsv",
         "output/inferences-s-other-methods/sweepfinder/turkana-sfs.tsv",
+        "output/inferences-s-other-methods/clues/stc1-prepared.haps",
+        "output/inferences-s-other-methods/clues/stc1-prepared.sample",
+        "output/inferences-s-other-methods/clues/recombination.map",
+        "output/inferences-s-other-methods/clues/stc1-prepared.poplabels",
+        "output/inferences-s-other-methods/clues/stc1-sites-of-interest.txt"
+
+
+rule relate_prepare_files:
+    input:
+        sample = "output/inferences-s-other-methods/clues/stc1-prepared.sample",
+        haps = "output/inferences-s-other-methods/clues/stc1-prepared.haps"
+    output:
+        poplabels = "output/inferences-s-other-methods/clues/stc1-prepared.poplabels",
+        sites_of_interest = "output/inferences-s-other-methods/clues/stc1-sites-of-interest.txt"
+    params:
+        num_sites_of_interest = 10
+    conda: "envs/simulate.yaml"
+    notebook: "notebooks/prepare-data/prepare-relate.py.ipynb"
+
+
+rule relate_prepare_input:
+    input:
+        haps = "output/inferences-s-other-methods/clues/stc1.haps",
+        sample = "output/inferences-s-other-methods/clues/stc1.sample",
+        reference = "raw-data/human-genome/human_ancestor_GRCh37_e59/human_ancestor_8.fa"
+    output:
+        haps = "output/inferences-s-other-methods/clues/stc1-prepared.haps",
+        sample = "output/inferences-s-other-methods/clues/stc1-prepared.sample"
+    params:
+        outprefix = "output/inferences-s-other-methods/clues/stc1-prepared"
+    log: "output/inferences-s-other-methods/clues/relate-prepare-input-files.log"
+    shell: "touch {params.outprefix}.dist ; "
+           "bin/relate/scripts/PrepareInputFiles/PrepareInputFiles.sh "
+           "--haps {input.haps} --sample {input.sample} --ancestor {input.reference} "
+           "-o {params.outprefix} &> {log}; "
+           "gunzip {output.haps}.gz ; "
+           "gunzip {output.sample}.gz ; "
+
+
+rule relate_convert_vcf:
+    input: config["raw_sweep_region_vcf"]
+    output:
+        haps = "output/inferences-s-other-methods/clues/stc1.haps",
+        sample = "output/inferences-s-other-methods/clues/stc1.sample"
+    log: "output/inferences-s-other-methods/clues/relate-convert-from-vcf.log"
+    shell: "bin/relate/bin/RelateFileFormats --mode ConvertFromVcf --haps {output.haps} --sample {output.sample} -i raw-data/20211130_sweep-region/high_cov.SNP1.hg19_chr8.phased_STC1.vcf.recode &> {log}"
+
 
 rule sweepfinder_format_tables:
     input:
@@ -24,13 +71,16 @@ rule sweepfinder_format_tables:
     conda: "envs/simulate.yaml"
     notebook: "notebooks/prepare-data/sweepfinder-format-conversion.py.ipynb"
 
+
 rule recombination_rates:
     input: "raw-data/20220216_recombination-maps/maps_chr.8"
     output:
         recombination_at_sweep = "output/empirical-statistics/recombination-at-sweep.tsv",
-        chromosome_recombinations = "output/empirical-statistics/recombination-at-chromosome-8.tsv"
+        chromosome_recombinations = "output/empirical-statistics/recombination-at-chromosome-8.tsv",
+        relate = "output/inferences-s-other-methods/clues/recombination.map"
     conda: "envs/simulate.yaml"
     notebook: "notebooks/prepare-data/recombination.py.ipynb"
+
 
 rule compress_empirical_log_features:
     input: "output/empirical-windows/npy-log-scale/sweep.npy"

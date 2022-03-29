@@ -14,3 +14,4 @@ src
 .ipynb_checkpoints
 .snakemake
 __pycache__
+*~undo-tree~

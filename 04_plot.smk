@@ -6,7 +6,28 @@ rule all:
         "fig/sfs.pdf",
         "fig/recombination-rates.pdf",
         "fig/sweepfinder.pdf",
-        "fig/selection-scan.pdf"
+        "fig/selection-scan.pdf",
+        "fig/sweep-signature_dominant.pdf",
+        "fig/sweep-signature_codominant.pdf"
+
+
+rule plot_sweep_signals:
+    input: "output/sweep-signals/sweep-signals_{datatype}.tsv"
+    output: "fig/sweep-signature_{datatype}.pdf",
+    conda: "envs/r.yaml"
+    notebook: "notebooks/plot/sweep-signals.r.ipynb"
+
+
+rule prepare_sweep_signals:
+    input:
+        empirical = "output/empirical-windows/data.tar",
+        simulated = "output/simulation-data/{datatype}/data.tar",
+        parameters = "output/simulation-data-processed/parameters/{datatype}_parameters-clean.tsv"
+    output: "output/sweep-signals/sweep-signals_{datatype}.tsv"
+    params:
+        num_sel_bins = 3
+    conda: "envs/simulate.yaml"
+    notebook: "notebooks/prepare-data/prepare-sweep-signals.py.ipynb"
 
 
 rule plot_selection_scan:
