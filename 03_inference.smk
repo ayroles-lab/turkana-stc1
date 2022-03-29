@@ -27,11 +27,44 @@ rule all:
         s_esimate_notebook = "output/inferences-s-other-methods/messerneher2012.html",
         sweepfinder = "output/inferences-s-other-methods/sweepfinder2-results.tsv",
         selection_scan = "output/selection-scan/selection-scan-features.tsv",
-        # TEMP
-        brlens = expand(
-            "output/inferences-s-other-methods/clues/branch-lengths/relate-brlens_{site}.timeb",
-            site=[23886711]
+        clues = expand(
+            "output/inferences-s-other-methods/clues/clues-results/clues-result_{site}.epochs.npy",
+            site=relate_sites_of_interest()
         )
+
+
+rule clues:
+    input:
+        coal = "output/inferences-s-other-methods/clues/stc1-popsizes.coal",
+        times = "output/inferences-s-other-methods/clues/branch-lengths/relate-brlens_{site}.timeb"
+    output:
+        "output/inferences-s-other-methods/clues/clues-results/clues-result_{site}.epochs.npy",
+        "output/inferences-s-other-methods/clues/clues-results/clues-result_{site}.freqs.npy",
+        "output/inferences-s-other-methods/clues/clues-results/clues-result_{site}.post.npy"
+    params:
+        in_prefix = "output/inferences-s-other-methods/clues/branch-lengths/relate-brlens_{site}",
+        out_prefix = "output/inferences-s-other-methods/clues/clues-results/clues-result_{site}",
+        sweep_frequency = 0.8,
+        dominance = 0.5,
+        burnin = 1000,
+        thin = 100,
+        sel_time_cutoff = 2000, # Infer selection up to this many generations in the past
+        num_allele_freq_bins = 50,
+        max_sel_coeff = 0.5
+    log: "output/inferences-s-other-methods/clues/clues-results/clues-result_{site}.log"
+    conda: "envs/clues.yaml"
+    shell:
+        "cd src/clues ; "
+        "python -u inference.py "
+        "--times ../../{params.in_prefix} "
+        "--coal ../../{input.coal} "
+        "--popFreq {params.sweep_frequency} "
+        "--dom {params.dominance} "
+        "--tCutoff {params.sel_time_cutoff} "
+        "--df {params.num_allele_freq_bins} "
+        "--sMax {params.max_sel_coeff} "
+        "--burnin {params.burnin} --thin {params.thin} "
+        "--out ../../{params.out_prefix} &> ../../{log}"
 
 
 rule relate_sample_branch_lengths:
@@ -44,7 +77,7 @@ rule relate_sample_branch_lengths:
         in_prefix = "output/inferences-s-other-methods/clues/stc1-popsizes",
         out_prefix = "output/inferences-s-other-methods/clues/branch-lengths/relate-brlens_{site}",
         mut_rate = 1.083e-8,
-        num_samples = 3
+        num_samples = 3_000
     log: "output/inferences-s-other-methods/clues/branch-lengths/logs/relate-brlens_{site}.log"
     shell:
         "bin/relate/scripts/SampleBranchLengths/SampleBranchLengths.sh "
