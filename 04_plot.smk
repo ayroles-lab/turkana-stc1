@@ -5,6 +5,7 @@ def relate_sites_of_interest():
     with open("output/inferences-s-other-methods/clues/stc1-sites-of-interest.txt") as f:
         return [int(line.strip()) for line in f]
 
+
 rule all:
     input:
         "fig/sfs.pdf",
@@ -13,12 +14,18 @@ rule all:
         "fig/selection-scan.pdf",
         "fig/sweep-signature_dominant.pdf",
         "fig/sweep-signature_codominant.pdf",
-        "fig/clues-results.pdf"
+        "fig/clues-results-raw.pdf",
+        "fig/clues-results-transformed.pdf"
 
 
 rule plot_clues:
-    input: "output/inferences-s-other-methods/clues/clues-results-tidy.tsv"
-    output: "fig/clues-results.pdf"
+    input:
+        clues = "output/inferences-s-other-methods/clues/clues-results-tidy.tsv",
+        arg_info = "output/inferences-s-other-methods/clues/stc1-popsizes.mut"
+    output:
+        raw = "fig/clues-results-raw.pdf",
+        transformed = "fig/clues-results-transformed.pdf",
+        individual_plots = directory("fig/clues-individual-sites/")
     conda: "envs/r.yaml"
     notebook: "notebooks/plot/clues.r.ipynb"
 

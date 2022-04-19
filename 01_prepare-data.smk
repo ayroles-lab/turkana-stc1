@@ -16,17 +16,14 @@ rule all:
         "output/inferences-s-other-methods/clues/stc1-prepared.haps",
         "output/inferences-s-other-methods/clues/stc1-prepared.sample",
         "output/inferences-s-other-methods/clues/recombination.map",
-        "output/inferences-s-other-methods/clues/stc1-prepared.poplabels",
-        "output/inferences-s-other-methods/clues/stc1-sites-of-interest.txt"
+        "output/inferences-s-other-methods/clues/stc1-prepared.poplabels"
 
 
 rule relate_prepare_files:
     input:
-        sample = "output/inferences-s-other-methods/clues/stc1-prepared.sample",
-        haps = "output/inferences-s-other-methods/clues/stc1-prepared.haps"
+        sample = "output/inferences-s-other-methods/clues/stc1-prepared.sample"
     output:
-        poplabels = "output/inferences-s-other-methods/clues/stc1-prepared.poplabels",
-        sites_of_interest = "output/inferences-s-other-methods/clues/stc1-sites-of-interest.txt"
+        poplabels = "output/inferences-s-other-methods/clues/stc1-prepared.poplabels"
     params:
         num_sites_of_interest = 10
     conda: "envs/simulate.yaml"

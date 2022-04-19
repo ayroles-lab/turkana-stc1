@@ -1,9 +1,16 @@
 
 configfile: '03_config.yaml'
 
-def relate_sites_of_interest():
-    with open("output/inferences-s-other-methods/clues/stc1-sites-of-interest.txt") as f:
-        return [int(line.strip()) for line in f]
+def clues_sites(wildcards):
+    # This line halts workflow execution until the sites of interest rule runs:
+    sites_file = checkpoints.clues_sites_of_interest.get(**wildcards).output["sites_of_interest"]
+    with open(sites_file) as f:
+        sites_of_interest = [int(line.strip()) for line in f]
+    return expand(
+        "output/inferences-s-other-methods/clues/clues-results/clues-result_{site}.epochs.npy",
+        site=sites_of_interest
+    )
+
 
 rule all:
     input:
@@ -27,10 +34,7 @@ rule all:
         s_esimate_notebook = "output/inferences-s-other-methods/messerneher2012.html",
         sweepfinder = "output/inferences-s-other-methods/sweepfinder2-results.tsv",
         selection_scan = "output/selection-scan/selection-scan-features.tsv",
-        clues = expand(
-            "output/inferences-s-other-methods/clues/clues-results/clues-result_{site}.epochs.npy",
-            site=relate_sites_of_interest()
-        )
+        clues = clues_sites
 
 
 rule clues:
@@ -46,10 +50,10 @@ rule clues:
         out_prefix = "output/inferences-s-other-methods/clues/clues-results/clues-result_{site}",
         sweep_frequency = 0.8,
         dominance = 0.5,
-        burnin = 1000,
-        thin = 100,
-        sel_time_cutoff = 2000, # Infer selection up to this many generations in the past
-        num_allele_freq_bins = 50,
+        burnin = 0, # 1000,
+        thin = 1, # 100,
+        sel_time_cutoff = 750, # Infer selection up to this many generations in the past
+        num_allele_freq_bins = 20, # 50,
         max_sel_coeff = 0.5
     log: "output/inferences-s-other-methods/clues/clues-results/clues-result_{site}.log"
     conda: "envs/clues.yaml"
@@ -77,7 +81,7 @@ rule relate_sample_branch_lengths:
         in_prefix = "output/inferences-s-other-methods/clues/stc1-popsizes",
         out_prefix = "output/inferences-s-other-methods/clues/branch-lengths/relate-brlens_{site}",
         mut_rate = 1.083e-8,
-        num_samples = 3_000
+        num_samples = 2 # 3_000
     log: "output/inferences-s-other-methods/clues/branch-lengths/logs/relate-brlens_{site}.log"
     shell:
         "bin/relate/scripts/SampleBranchLengths/SampleBranchLengths.sh "
@@ -90,6 +94,15 @@ rule relate_sample_branch_lengths:
         "--first_bp {wildcards.site} "
         "--last_bp {wildcards.site} "
         "--seed 13 &> {log}"
+
+
+checkpoint clues_sites_of_interest:
+    input:
+        arg_info = "output/inferences-s-other-methods/clues/stc1-popsizes.mut"
+    output:
+        sites_of_interest = "output/inferences-s-other-methods/clues/stc1-sites-of-interest.txt"
+    conda: "envs/simulate.yaml"
+    notebook: "notebooks/inference/clues-sites-of-interest.py.ipynb"
 
 
 rule relate_estimate_popsize:
