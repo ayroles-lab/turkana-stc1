@@ -9,7 +9,7 @@ simulation-parameters:
 
   selection-coefficient:
     distribution: log-uniform
-    lower: 0.01
+    lower: 0.001
     upper: 1
   selection-generation: 1
   selection-coordinate: 537418

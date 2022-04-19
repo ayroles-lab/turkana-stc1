@@ -25,9 +25,12 @@ target_factor <- function(target) {
         'log-sel-strength'='Sel. strength',
         'sweep-mode'='Sweep mode',
         'hard-vs-soft'='Hard vs. Soft',
-        'rnm-vs-sgv'='RNM vs. SGV'
+        'rnm-vs-sgv'='RNM vs. SGV',
+        'rnm-num-mutations'='Number of adaptive mutations',
+        'sgv-f0'='Frequency at selection',
+        'sweep-age'='Sweep age'
     ))
-    result <- factor(result, levels=c('Sel. strength', 'Sweep mode', 'Hard vs. Soft', 'RNM vs. SGV'))
+    result <- factor(result, levels=c('Sel. strength', 'Sweep mode', 'Sweep age', 'Hard vs. Soft', 'RNM vs. SGV', 'Number of adaptive mutations', 'Frequency at selection'))
     return(result)
 }
 

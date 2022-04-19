@@ -3,11 +3,11 @@ benchmarks
 bin
 doc
 fig
-janky
 logs
 output
 raw-data
 raw-simulations
+scratch-pad
 src
 
 .DS_Store
