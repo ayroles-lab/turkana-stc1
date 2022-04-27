@@ -25,10 +25,14 @@ rule plot_clues:
     output:
         raw = "fig/clues-results-raw.pdf",
         transformed = "fig/clues-results-transformed.pdf",
-        individual_plots = directory("fig/clues-individual-sites/")
+        individual_plots = expand(
+            "fig/clues-individual-sites/clues_{site}.pdf",
+            site=relate_sites_of_interest()
+        )
+    params:
+        plot_dir = directory("fig/clues-individual-sites/")
     conda: "envs/r.yaml"
     notebook: "notebooks/plot/clues.r.ipynb"
-
 
 rule prepare_clues:
     input:
@@ -39,13 +43,11 @@ rule prepare_clues:
     conda: "envs/simulate.yaml"
     notebook: "notebooks/plot/prepare-clues-results.py.ipynb"
 
-
 rule plot_sweep_signals:
     input: "output/sweep-signals/sweep-signals_{datatype}.tsv"
     output: "fig/sweep-signature_{datatype}.pdf",
     conda: "envs/r.yaml"
     notebook: "notebooks/plot/sweep-signals.r.ipynb"
-
 
 rule prepare_sweep_signals:
     input:
@@ -57,7 +59,6 @@ rule prepare_sweep_signals:
         num_sel_bins = 3
     conda: "envs/simulate.yaml"
     notebook: "notebooks/prepare-data/prepare-sweep-signals.py.ipynb"
-
 
 rule plot_selection_scan:
     input: "output/selection-scan/selection-scan-features.tsv"

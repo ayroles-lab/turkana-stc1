@@ -18,18 +18,18 @@ rule all:
             "output/simulation-data-processed/info/{sim_id}_data-report.txt",
             sim_id=(config["training_ids"])
         ),
-        training_inferences_replicates = expand(
-            "output/inferences-training/{target}_{training}_{testing}_replicate-{k}.tsv",
-            target=config["inference_targets"],
-            training=config["training_ids"],
-            testing=["training", "validation"],
-            k=range(config["num_model_replicates"])
-        ),
-        empirical_inference_replicates = expand(
-            "output/inferences-empirical/summaries/{target}_{training}.tsv",
-            target=config["inference_targets"],
-            training=config["training_ids"]
-        ),
+        # training_inferences_replicates = expand(
+        #     "output/inferences-training/{target}_{training}_{testing}_replicate-{k}.tsv",
+        #     target=config["inference_targets"],
+        #     training=config["training_ids"],
+        #     testing=["training", "validation"],
+        #     k=range(config["num_model_replicates"])
+        # ),
+        # empirical_inference_replicates = expand(
+        #     "output/inferences-empirical/summaries/{target}_{training}.tsv",
+        #     target=config["inference_targets"],
+        #     training=config["training_ids"]
+        # ),
         s_estimate = "output/inferences-s-other-methods/messerneher2012-estimate.txt",
         s_esimate_notebook = "output/inferences-s-other-methods/messerneher2012.html",
         sweepfinder = "output/inferences-s-other-methods/sweepfinder2-results.tsv",
@@ -49,11 +49,11 @@ rule clues:
         in_prefix = "output/inferences-s-other-methods/clues/branch-lengths/relate-brlens_{site}",
         out_prefix = "output/inferences-s-other-methods/clues/clues-results/clues-result_{site}",
         sweep_frequency = 0.8,
-        dominance = 0.5,
-        burnin = 0, # 1000,
-        thin = 1, # 100,
+        dominance = 1.0, # 0.5,
+        burnin = 1000,
+        thin = 100,
         sel_time_cutoff = 750, # Infer selection up to this many generations in the past
-        num_allele_freq_bins = 20, # 50,
+        num_allele_freq_bins = 30,
         max_sel_coeff = 0.5
     log: "output/inferences-s-other-methods/clues/clues-results/clues-result_{site}.log"
     conda: "envs/clues.yaml"
@@ -62,7 +62,7 @@ rule clues:
         "python -u inference.py "
         "--times ../../{params.in_prefix} "
         "--coal ../../{input.coal} "
-        "--popFreq {params.sweep_frequency} "
+        # "--popFreq {params.sweep_frequency} "
         "--dom {params.dominance} "
         "--tCutoff {params.sel_time_cutoff} "
         "--df {params.num_allele_freq_bins} "
@@ -81,7 +81,7 @@ rule relate_sample_branch_lengths:
         in_prefix = "output/inferences-s-other-methods/clues/stc1-popsizes",
         out_prefix = "output/inferences-s-other-methods/clues/branch-lengths/relate-brlens_{site}",
         mut_rate = 1.083e-8,
-        num_samples = 2 # 3_000
+        num_samples = 3_000
     log: "output/inferences-s-other-methods/clues/branch-lengths/logs/relate-brlens_{site}.log"
     shell:
         "bin/relate/scripts/SampleBranchLengths/SampleBranchLengths.sh "

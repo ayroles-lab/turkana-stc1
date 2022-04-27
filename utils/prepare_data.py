@@ -27,6 +27,15 @@ def add_sweep_age_column(df):
     return results
 
 
+def add_sgv_ages(df):
+    result = add_sweep_age_column(df)
+    result = result.loc[result.sweep_mode == "sgv (true)"]
+    result = result.assign(
+        sgv_drift_time = result.slim_generations - result.sweep_age,
+    )
+    return result
+
+
 def balance_hard_vs_soft(df, seed=None):
     results = add_regime_kind_column(df)
     results = results.groupby("regime_kind").sample(
@@ -55,6 +64,10 @@ def balance_sweep_age(df, seed=None):
     return add_sweep_age_column(df)
 
 
+def balance_sgv_ages(df, seed=None):
+    return add_sgv_ages(df)
+
+
 balancing_functions = {
     "log-sel-strength": None,
     "sweep-mode": None,
@@ -63,6 +76,8 @@ balancing_functions = {
     "sweep-age": balance_sweep_age,
     "sgv-f0": balance_sgv_f0,
     "rnm-num-mutations": balance_rnm_num_mutations,
+    "sgv-drift-time": balance_sgv_ages,
+    "sgv-total-time": balance_sgv_ages,
 }
 
 # The actual columns in the DataFrames corresponding to the true labels for each inference target.
@@ -74,4 +89,6 @@ target_columns = {
     "sweep-age": "sweep_age",
     "sgv-f0": "actual_frequency_at_selection",
     "rnm-num-mutations": "sample_num_adaptive_copies",
+    "sgv-drift-time": "sgv_drift_time",
+    "sgv-total-time": "slim_generations",
 }
