@@ -78,6 +78,7 @@ balancing_functions = {
     "rnm-num-mutations": balance_rnm_num_mutations,
     "sgv-drift-time": balance_sgv_ages,
     "sgv-total-time": balance_sgv_ages,
+    "num-adaptive-alleles": None,
 }
 
 # The actual columns in the DataFrames corresponding to the true labels for each inference target.
@@ -91,4 +92,5 @@ target_columns = {
     "rnm-num-mutations": "sample_num_adaptive_copies",
     "sgv-drift-time": "sgv_drift_time",
     "sgv-total-time": "slim_generations",
+    "num-adaptive-alleles": "sample_num_adaptive_copies",
 }

@@ -2,7 +2,7 @@
 configfile: "03_config.yaml"
 
 def relate_sites_of_interest():
-    with open("output/inferences-s-other-methods/clues/stc1-sites-of-interest.txt") as f:
+    with open("output/clues/stc1-sites-of-interest.txt") as f:
         return [int(line.strip()) for line in f]
 
 
@@ -20,8 +20,8 @@ rule all:
 
 rule plot_clues:
     input:
-        clues = "output/inferences-s-other-methods/clues/clues-results-tidy.tsv",
-        arg_info = "output/inferences-s-other-methods/clues/stc1-popsizes.mut"
+        clues = "output/clues/clues-results-tidy.tsv",
+        arg_info = "output/clues/stc1-popsizes.mut"
     output:
         raw = "fig/clues-results-raw.pdf",
         transformed = "fig/clues-results-transformed.pdf",
@@ -36,10 +36,10 @@ rule plot_clues:
 
 rule prepare_clues:
     input:
-        expand("output/inferences-s-other-methods/clues/clues-results/clues-result_{site}{suffix}",
+        expand("output/clues/clues-results/clues-result_{site}{suffix}",
                site=relate_sites_of_interest(),
                suffix=[".log", ".epochs.npy", ".freqs.npy", ".post.npy"])
-    output: "output/inferences-s-other-methods/clues/clues-results-tidy.tsv"
+    output: "output/clues/clues-results-tidy.tsv"
     conda: "envs/simulate.yaml"
     notebook: "notebooks/plot/prepare-clues-results.py.ipynb"
 
@@ -67,7 +67,7 @@ rule plot_selection_scan:
     notebook: "notebooks/plot/selection-scan.r.ipynb"
 
 rule plot_sweepfinder:
-    input: "output/inferences-s-other-methods/sweepfinder2-results.tsv"
+    input: "output/sweepfinder/sweepfinder2-results.tsv"
     output: "fig/sweepfinder.pdf"
     conda: "envs/r.yaml"
     params:

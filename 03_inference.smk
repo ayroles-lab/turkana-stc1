@@ -7,7 +7,7 @@ def clues_sites(wildcards):
     with open(sites_file) as f:
         sites_of_interest = [int(line.strip()) for line in f]
     return expand(
-        "output/inferences-s-other-methods/clues/clues-results/clues-result_{site}.epochs.npy",
+        "output/clues/clues-results/clues-result_{site}.epochs.npy",
         site=sites_of_interest
     )
 
@@ -18,44 +18,44 @@ rule all:
             "output/simulation-data-processed/info/{sim_id}_data-report.txt",
             sim_id=(config["training_ids"])
         ),
-        # training_inferences_replicates = expand(
-        #     "output/inferences-training/{target}_{training}_{testing}_replicate-{k}.tsv",
-        #     target=config["inference_targets"],
-        #     training=config["training_ids"],
-        #     testing=["training", "validation"],
-        #     k=range(config["num_model_replicates"])
-        # ),
-        # empirical_inference_replicates = expand(
-        #     "output/inferences-empirical/summaries/{target}_{training}.tsv",
-        #     target=config["inference_targets"],
-        #     training=config["training_ids"]
-        # ),
-        s_estimate = "output/inferences-s-other-methods/messerneher2012-estimate.txt",
-        s_esimate_notebook = "output/inferences-s-other-methods/messerneher2012.html",
-        sweepfinder = "output/inferences-s-other-methods/sweepfinder2-results.tsv",
+        training_inferences_replicates = expand(
+            "output/inferences-training/{target}_{training}_{testing}_replicate-{k}.tsv",
+            target=config["inference_targets"],
+            training=config["training_ids"],
+            testing=["training", "validation"],
+            k=range(config["num_model_replicates"])
+        ),
+        empirical_inference_replicates = expand(
+            "output/inferences-empirical/summaries/{target}_{training}.tsv",
+            target=config["inference_targets"],
+            training=config["training_ids"]
+        ),
+        s_estimate = "output/messerneher/messerneher2012-estimate.txt",
+        s_esimate_notebook = "output/messerneher/messerneher2012.html",
+        sweepfinder = "output/sweepfinder/sweepfinder2-results.tsv",
         selection_scan = "output/selection-scan/selection-scan-features.tsv",
         clues = clues_sites
 
 
 rule clues:
     input:
-        coal = "output/inferences-s-other-methods/clues/stc1-popsizes.coal",
-        times = "output/inferences-s-other-methods/clues/branch-lengths/relate-brlens_{site}.timeb"
+        coal = "output/clues/stc1-popsizes.coal",
+        times = "output/clues/branch-lengths/relate-brlens_{site}.timeb"
     output:
-        "output/inferences-s-other-methods/clues/clues-results/clues-result_{site}.epochs.npy",
-        "output/inferences-s-other-methods/clues/clues-results/clues-result_{site}.freqs.npy",
-        "output/inferences-s-other-methods/clues/clues-results/clues-result_{site}.post.npy"
+        "output/clues/clues-results/clues-result_{site}.epochs.npy",
+        "output/clues/clues-results/clues-result_{site}.freqs.npy",
+        "output/clues/clues-results/clues-result_{site}.post.npy"
     params:
-        in_prefix = "output/inferences-s-other-methods/clues/branch-lengths/relate-brlens_{site}",
-        out_prefix = "output/inferences-s-other-methods/clues/clues-results/clues-result_{site}",
+        in_prefix = "output/clues/branch-lengths/relate-brlens_{site}",
+        out_prefix = "output/clues/clues-results/clues-result_{site}",
         sweep_frequency = 0.8,
-        dominance = 1.0, # 0.5,
+        dominance = 0.5,
         burnin = 1000,
         thin = 100,
         sel_time_cutoff = 750, # Infer selection up to this many generations in the past
         num_allele_freq_bins = 30,
-        max_sel_coeff = 0.5
-    log: "output/inferences-s-other-methods/clues/clues-results/clues-result_{site}.log"
+        max_sel_coeff = 0.2
+    log: "output/clues/clues-results/clues-result_{site}.log"
     conda: "envs/clues.yaml"
     shell:
         "cd src/clues ; "
@@ -73,16 +73,16 @@ rule clues:
 
 rule relate_sample_branch_lengths:
     input:
-        anc = "output/inferences-s-other-methods/clues/stc1-popsizes.anc",
-        mut = "output/inferences-s-other-methods/clues/stc1-popsizes.mut",
-        coal = "output/inferences-s-other-methods/clues/stc1-popsizes.coal"
-    output: "output/inferences-s-other-methods/clues/branch-lengths/relate-brlens_{site}.timeb"
+        anc = "output/clues/stc1-popsizes.anc",
+        mut = "output/clues/stc1-popsizes.mut",
+        coal = "output/clues/stc1-popsizes.coal"
+    output: "output/clues/branch-lengths/relate-brlens_{site}.timeb"
     params:
-        in_prefix = "output/inferences-s-other-methods/clues/stc1-popsizes",
-        out_prefix = "output/inferences-s-other-methods/clues/branch-lengths/relate-brlens_{site}",
+        in_prefix = "output/clues/stc1-popsizes",
+        out_prefix = "output/clues/branch-lengths/relate-brlens_{site}",
         mut_rate = 1.083e-8,
         num_samples = 3_000
-    log: "output/inferences-s-other-methods/clues/branch-lengths/logs/relate-brlens_{site}.log"
+    log: "output/clues/branch-lengths/logs/relate-brlens_{site}.log"
     shell:
         "bin/relate/scripts/SampleBranchLengths/SampleBranchLengths.sh "
         "-i {params.in_prefix} "
@@ -98,27 +98,27 @@ rule relate_sample_branch_lengths:
 
 checkpoint clues_sites_of_interest:
     input:
-        arg_info = "output/inferences-s-other-methods/clues/stc1-popsizes.mut"
+        arg_info = "output/clues/stc1-popsizes.mut"
     output:
-        sites_of_interest = "output/inferences-s-other-methods/clues/stc1-sites-of-interest.txt"
+        sites_of_interest = "output/clues/stc1-sites-of-interest.txt"
     conda: "envs/simulate.yaml"
     notebook: "notebooks/inference/clues-sites-of-interest.py.ipynb"
 
 
 rule relate_estimate_popsize:
     input:
-        anc = "output/inferences-s-other-methods/clues/stc1-relate.anc",
-        mut = "output/inferences-s-other-methods/clues/stc1-relate.mut",
-        poplabels = "output/inferences-s-other-methods/clues/stc1-prepared.poplabels"
+        anc = "output/clues/stc1-relate.anc",
+        mut = "output/clues/stc1-relate.mut",
+        poplabels = "output/clues/stc1-prepared.poplabels"
     output:
-        anc = "output/inferences-s-other-methods/clues/stc1-popsizes.anc",
-        mut = "output/inferences-s-other-methods/clues/stc1-popsizes.mut",
-        coal = "output/inferences-s-other-methods/clues/stc1-popsizes.coal"
+        anc = "output/clues/stc1-popsizes.anc",
+        mut = "output/clues/stc1-popsizes.mut",
+        coal = "output/clues/stc1-popsizes.coal"
     params:
-        in_prefix = "output/inferences-s-other-methods/clues/stc1-relate",
-        out_prefix = "output/inferences-s-other-methods/clues/stc1-popsizes",
+        in_prefix = "output/clues/stc1-relate",
+        out_prefix = "output/clues/stc1-popsizes",
         mut_rate = 1.083e-8
-    log: "output/inferences-s-other-methods/clues/stc1-popsizes.log"
+    log: "output/clues/stc1-popsizes.log"
     shell:
         "bin/relate/scripts/EstimatePopulationSize/EstimatePopulationSize.sh "
         "-i {params.in_prefix} "
@@ -130,19 +130,19 @@ rule relate_estimate_popsize:
 
 rule relate_run_all:
     input:
-        haps = "output/inferences-s-other-methods/clues/stc1-prepared.haps",
-        sample = "output/inferences-s-other-methods/clues/stc1-prepared.sample",
-        rec_map = "output/inferences-s-other-methods/clues/recombination.map"
+        haps = "output/clues/stc1-prepared.haps",
+        sample = "output/clues/stc1-prepared.sample",
+        rec_map = "output/clues/recombination.map"
     output:
-        anc = "output/inferences-s-other-methods/clues/stc1-relate.anc",
-        mut = "output/inferences-s-other-methods/clues/stc1-relate.mut"
+        anc = "output/clues/stc1-relate.anc",
+        mut = "output/clues/stc1-relate.mut"
     params:
         out_prefix = "stc1-relate",
         mut_rate = 1.083e-8,
         hap_pop_size = 60000
-    log: "output/inferences-s-other-methods/clues/relate-run-all.log"
-    shell: "cd output/inferences-s-other-methods/clues ; "
-           "../../../bin/relate/bin/Relate "
+    log: "output/clues/relate-run-all.log"
+    shell: "cd output/clues ; "
+           "../../bin/relate/bin/Relate "
            "--mode All "
            "-m {params.mut_rate} "
            "-N {params.hap_pop_size} "
@@ -167,18 +167,18 @@ rule selection_scan:
 
 rule sweepfinder2:
     input:
-        data = "output/inferences-s-other-methods/sweepfinder-data/stc1-sweepfinder.tsv",
-        sfs = "output/inferences-s-other-methods/sweepfinder-data/turkana-sfs.tsv"
-    output: "output/inferences-s-other-methods/sweepfinder2-results.tsv"
-    log: "output/inferences-s-other-methods/sweepfinder-data/sweepfinder2.log"
+        data = "output/sweepfinder/stc1-sweepfinder.tsv",
+        sfs = "output/sweepfinder/turkana-sfs.tsv"
+    output: "output/sweepfinder/sweepfinder2-results.tsv"
+    log: "output/sweepfinder/sweepfinder2.log"
     params:
         grid = config["sweepfinder_grid_number"]
     shell: "bin/SweepFinder2 -l {params.grid} {input.data} {input.sfs} {output} &> {log}"
 
 
 rule convert_messer_neher_notebook:
-    input: "output/inferences-s-other-methods/messerneher2012.ipynb"
-    output: "output/inferences-s-other-methods/messerneher2012.html"
+    input: "output/messerneher/messerneher2012.ipynb"
+    output: "output/messerneher/messerneher2012.html"
     conda: "envs/simulate.yaml"
     shell: "jupyter nbconvert --to html {input}"
 
@@ -187,13 +187,13 @@ rule infer_s_messer_neher_2012:
     input:
         ms = "output/empirical-windows/ms/sweep.ms",
     output:
-        estimate = "output/inferences-s-other-methods/messerneher2012-estimate.txt",
-        notebook="output/inferences-s-other-methods/messerneher2012.ipynb"
+        estimate = "output/messerneher/messerneher2012-estimate.txt",
+        notebook="output/messerneher/messerneher2012.ipynb"
     params:
         mut_rate = 1.083e-8,
         rec_rate = 1.083e-8
     conda: "envs/simulate.yaml"
-    log: notebook="output/inferences-s-other-methods/messerneher2012.ipynb"
+    log: notebook="output/messerneher/messerneher2012.ipynb"
     notebook: "notebooks/inference/estimate-s-messer-neher-2012.py.ipynb"
 
 

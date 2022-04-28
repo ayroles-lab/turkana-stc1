@@ -8,11 +8,11 @@ sweep_region_end: 24424864
 stats_file_location: "resources/normalization-stats.tsv"
 
 raw_sim_folder: "raw-simulations/20220421_simulations"
-epochs_for_model_training: 50
+epochs_for_model_training: 1 # 50
 validation_percentage: 0.2
 sims_per_regime: 5000
 
-num_model_replicates: 10
+num_model_replicates: 2 # 10
 
 training_ids:
   - codominant
@@ -28,6 +28,6 @@ inference_targets:
   # - rnm-num-mutations
   - sgv-drift-time
   - sgv-total-time
-
+  - num-adaptive-copies
 
 sweepfinder_grid_number: 21
