@@ -52,7 +52,7 @@ rule clues:
         dominance = 0.5,
         burnin = 1000,
         thin = 100,
-        sel_time_cutoff = 750, # Infer selection up to this many generations in the past
+        sel_time_cutoff = 300, # Infer selection up to this many generations in the past
         num_allele_freq_bins = 30,
         max_sel_coeff = 0.2
     log: "output/clues/clues-results/clues-result_{site}.log"

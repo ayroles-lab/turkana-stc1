@@ -36,6 +36,10 @@ def add_sgv_ages(df):
     return result
 
 
+def add_log_adaptive_copies_column(df):
+    return df.assign(log_sample_num_adaptive_copies=np.log10(df.sample_num_adaptive_copies))
+
+
 def balance_hard_vs_soft(df, seed=None):
     results = add_regime_kind_column(df)
     results = results.groupby("regime_kind").sample(
@@ -67,6 +71,9 @@ def balance_sweep_age(df, seed=None):
 def balance_sgv_ages(df, seed=None):
     return add_sgv_ages(df)
 
+def balance_num_adaptive_alleles(df, seed=None):
+    return add_log_adaptive_copies_column(df)
+
 
 balancing_functions = {
     "log-sel-strength": None,
@@ -78,7 +85,7 @@ balancing_functions = {
     "rnm-num-mutations": balance_rnm_num_mutations,
     "sgv-drift-time": balance_sgv_ages,
     "sgv-total-time": balance_sgv_ages,
-    "num-adaptive-alleles": None,
+    "num-adaptive-alleles": balance_num_adaptive_alleles,
 }
 
 # The actual columns in the DataFrames corresponding to the true labels for each inference target.
@@ -92,5 +99,5 @@ target_columns = {
     "rnm-num-mutations": "sample_num_adaptive_copies",
     "sgv-drift-time": "sgv_drift_time",
     "sgv-total-time": "slim_generations",
-    "num-adaptive-alleles": "sample_num_adaptive_copies",
+    "num-adaptive-alleles": "log_sample_num_adaptive_copies",
 }

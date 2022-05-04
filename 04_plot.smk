@@ -14,8 +14,7 @@ rule all:
         "fig/selection-scan.pdf",
         "fig/sweep-signature_dominant.pdf",
         "fig/sweep-signature_codominant.pdf",
-        "fig/clues-results-raw.pdf",
-        "fig/clues-results-transformed.pdf"
+        "fig/clues-results.pdf",
 
 
 rule plot_clues:
@@ -23,8 +22,7 @@ rule plot_clues:
         clues = "output/clues/clues-results-tidy.tsv",
         arg_info = "output/clues/stc1-popsizes.mut"
     output:
-        raw = "fig/clues-results-raw.pdf",
-        transformed = "fig/clues-results-transformed.pdf",
+        results = "fig/clues-results.pdf",
         individual_plots = expand(
             "fig/clues-individual-sites/clues_{site}.pdf",
             site=relate_sites_of_interest()
