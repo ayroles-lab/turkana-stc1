@@ -2,7 +2,7 @@
 configfile: "03_config.yaml"
 
 def relate_sites_of_interest():
-    with open("output/clues/stc1-sites-of-interest.txt") as f:
+    with open("output/clues/05_sample-branch-lengths/stc1-sites-of-interest.txt") as f:
         return [int(line.strip()) for line in f]
 
 
@@ -20,7 +20,7 @@ rule all:
 rule plot_clues:
     input:
         clues = "output/clues/clues-results-tidy.tsv",
-        arg_info = "output/clues/stc1-popsizes.mut"
+        arg_info = "output/clues/04_popsize-inference/stc1-popsizes.mut"
     output:
         results = "fig/clues-results.pdf",
         individual_plots = expand(
@@ -32,9 +32,10 @@ rule plot_clues:
     conda: "envs/r.yaml"
     notebook: "notebooks/plot/clues.r.ipynb"
 
+
 rule prepare_clues:
     input:
-        expand("output/clues/clues-results/clues-result_{site}{suffix}",
+        expand("output/clues/06_clues-results/clues-result_{site}{suffix}",
                site=relate_sites_of_interest(),
                suffix=[".log", ".epochs.npy", ".freqs.npy", ".post.npy"])
     output: "output/clues/clues-results-tidy.tsv"

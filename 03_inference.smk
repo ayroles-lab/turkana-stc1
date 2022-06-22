@@ -1,13 +1,14 @@
 
 configfile: '03_config.yaml'
 
+
 def clues_sites(wildcards):
     # This line halts workflow execution until the sites of interest rule runs:
     sites_file = checkpoints.clues_sites_of_interest.get(**wildcards).output["sites_of_interest"]
     with open(sites_file) as f:
         sites_of_interest = [int(line.strip()) for line in f]
     return expand(
-        "output/clues/clues-results/clues-result_{site}.epochs.npy",
+        "output/clues/06_clues-results/clues-result_{site}.epochs.npy",
         site=sites_of_interest
     )
 
@@ -30,8 +31,12 @@ rule all:
             target=config["inference_targets"],
             training=config["training_ids"]
         ),
-        s_estimate = "output/messerneher/messerneher2012-estimate.txt",
-        s_esimate_notebook = "output/messerneher/messerneher2012.html",
+        messerneher_txt = expand(
+            "output/messerneher/mn2012_L-{window_size}_n-{haps_per_cluster}_{kind}",
+            window_size=[5000, 10000, 20000, 50000],
+            haps_per_cluster=[3, 5, 10],
+            kind=["hap-clusters.pdf", "estimate.txt"]
+        ),
         sweepfinder = "output/sweepfinder/sweepfinder2-results.tsv",
         selection_scan = "output/selection-scan/selection-scan-features.tsv",
         clues = clues_sites
@@ -39,30 +44,28 @@ rule all:
 
 rule clues:
     input:
-        coal = "output/clues/stc1-popsizes.coal",
-        times = "output/clues/branch-lengths/relate-brlens_{site}.timeb"
+        coal = "output/clues/04_popsize-inference/stc1-popsizes.coal",
+        times = "output/clues/05_sample-branch-lengths/relate-brlens_{site}.timeb"
     output:
-        "output/clues/clues-results/clues-result_{site}.epochs.npy",
-        "output/clues/clues-results/clues-result_{site}.freqs.npy",
-        "output/clues/clues-results/clues-result_{site}.post.npy"
+        "output/clues/06_clues-results/clues-result_{site}.epochs.npy",
+        "output/clues/06_clues-results/clues-result_{site}.freqs.npy",
+        "output/clues/06_clues-results/clues-result_{site}.post.npy"
     params:
-        in_prefix = "output/clues/branch-lengths/relate-brlens_{site}",
-        out_prefix = "output/clues/clues-results/clues-result_{site}",
-        sweep_frequency = 0.8,
+        in_prefix = "output/clues/05_sample-branch-lengths/relate-brlens_{site}",
+        out_prefix = "output/clues/06_clues-results/clues-result_{site}",
         dominance = 0.5,
         burnin = 1000,
         thin = 100,
         sel_time_cutoff = 300, # Infer selection up to this many generations in the past
         num_allele_freq_bins = 30,
         max_sel_coeff = 0.2
-    log: "output/clues/clues-results/clues-result_{site}.log"
+    log: "output/clues/06_clues-results/clues-result_{site}.log"
     conda: "envs/clues.yaml"
     shell:
         "cd src/clues ; "
         "python -u inference.py "
         "--times ../../{params.in_prefix} "
         "--coal ../../{input.coal} "
-        # "--popFreq {params.sweep_frequency} "
         "--dom {params.dominance} "
         "--tCutoff {params.sel_time_cutoff} "
         "--df {params.num_allele_freq_bins} "
@@ -73,16 +76,16 @@ rule clues:
 
 rule relate_sample_branch_lengths:
     input:
-        anc = "output/clues/stc1-popsizes.anc",
-        mut = "output/clues/stc1-popsizes.mut",
-        coal = "output/clues/stc1-popsizes.coal"
-    output: "output/clues/branch-lengths/relate-brlens_{site}.timeb"
+        anc = "output/clues/04_popsize-inference/stc1-popsizes.anc",
+        mut = "output/clues/04_popsize-inference/stc1-popsizes.mut",
+        coal = "output/clues/04_popsize-inference/stc1-popsizes.coal"
+    output: "output/clues/05_sample-branch-lengths/relate-brlens_{site}.timeb"
     params:
-        in_prefix = "output/clues/stc1-popsizes",
-        out_prefix = "output/clues/branch-lengths/relate-brlens_{site}",
+        in_prefix = "output/clues/04_popsize-inference/stc1-popsizes",
+        out_prefix = "output/clues/05_sample-branch-lengths/relate-brlens_{site}",
         mut_rate = 1.083e-8,
         num_samples = 3_000
-    log: "output/clues/branch-lengths/logs/relate-brlens_{site}.log"
+    log: "output/clues/05_sample-branch-lengths/relate-brlens_{site}.log"
     shell:
         "bin/relate/scripts/SampleBranchLengths/SampleBranchLengths.sh "
         "-i {params.in_prefix} "
@@ -98,27 +101,29 @@ rule relate_sample_branch_lengths:
 
 checkpoint clues_sites_of_interest:
     input:
-        arg_info = "output/clues/stc1-popsizes.mut"
+        arg_info = "output/clues/04_popsize-inference/stc1-popsizes.mut"
     output:
-        sites_of_interest = "output/clues/stc1-sites-of-interest.txt"
+        sites_of_interest = "output/clues/05_sample-branch-lengths/stc1-sites-of-interest.txt"
+    params:
+        num_sites = 30
     conda: "envs/simulate.yaml"
     notebook: "notebooks/inference/clues-sites-of-interest.py.ipynb"
 
 
 rule relate_estimate_popsize:
     input:
-        anc = "output/clues/stc1-relate.anc",
-        mut = "output/clues/stc1-relate.mut",
-        poplabels = "output/clues/stc1-prepared.poplabels"
+        anc = "output/clues/03_relate-results/stc1-relate.anc",
+        mut = "output/clues/03_relate-results/stc1-relate.mut",
+        poplabels = "output/clues/02_clean-input/stc1-clean.poplabels"
     output:
-        anc = "output/clues/stc1-popsizes.anc",
-        mut = "output/clues/stc1-popsizes.mut",
-        coal = "output/clues/stc1-popsizes.coal"
+        anc = "output/clues/04_popsize-inference/stc1-popsizes.anc",
+        mut = "output/clues/04_popsize-inference/stc1-popsizes.mut",
+        coal = "output/clues/04_popsize-inference/stc1-popsizes.coal"
     params:
-        in_prefix = "output/clues/stc1-relate",
-        out_prefix = "output/clues/stc1-popsizes",
+        in_prefix = "output/clues/03_relate-results/stc1-relate",
+        out_prefix = "output/clues/04_popsize-inference/stc1-popsizes",
         mut_rate = 1.083e-8
-    log: "output/clues/stc1-popsizes.log"
+    log: "output/clues/04_popsize-inference/stc1-popsizes.log"
     shell:
         "bin/relate/scripts/EstimatePopulationSize/EstimatePopulationSize.sh "
         "-i {params.in_prefix} "
@@ -130,27 +135,68 @@ rule relate_estimate_popsize:
 
 rule relate_run_all:
     input:
-        haps = "output/clues/stc1-prepared.haps",
-        sample = "output/clues/stc1-prepared.sample",
-        rec_map = "output/clues/recombination.map"
+        haps = "output/clues/02_clean-input/stc1-repolarized.haps",
+        sample = "output/clues/02_clean-input/stc1-clean.sample",
+        rec_map = "output/clues/01_raw-data/recombination.map"
     output:
-        anc = "output/clues/stc1-relate.anc",
-        mut = "output/clues/stc1-relate.mut"
+        anc = "output/clues/03_relate-results/stc1-relate.anc",
+        mut = "output/clues/03_relate-results/stc1-relate.mut"
     params:
         out_prefix = "stc1-relate",
         mut_rate = 1.083e-8,
         hap_pop_size = 60000
-    log: "output/clues/relate-run-all.log"
+    log: "output/clues/03_relate-results/relate-run-all.log"
     shell: "cd output/clues ; "
            "../../bin/relate/bin/Relate "
            "--mode All "
            "-m {params.mut_rate} "
            "-N {params.hap_pop_size} "
-           "--haps stc1-prepared.haps "
-           "--sample stc1-prepared.sample "
-           "--map recombination.map "
+           "--haps 02_clean-input/stc1-repolarized.haps "
+           "--sample 02_clean-input/stc1-clean.sample "
+           "--map 01_raw-data/recombination.map "
            "--seed 13 "
-           "-o {params.out_prefix} &> relate-run-all.log"
+           "-o {params.out_prefix} &> 03_relate-results/relate-run-all.log ; "
+           "mv stc1-relate* 03_relate-results"
+
+
+rule relate_prepare_and_repolarize:
+    input:
+        sample = "output/clues/02_clean-input/stc1-clean.sample",
+        haps = "output/clues/02_clean-input/stc1-clean.haps"
+    output:
+        poplabels = "output/clues/02_clean-input/stc1-clean.poplabels",
+        repolarized = "output/clues/02_clean-input/stc1-repolarized.haps",
+    conda: "envs/simulate.yaml"
+    notebook: "notebooks/inference/prepare-relate.py.ipynb"
+
+
+rule relate_prepare_input:
+    input:
+        haps = "output/clues/01_raw-data/stc1.haps",
+        sample = "output/clues/01_raw-data/stc1.sample",
+        reference = "raw-data/human-genome/human_ancestor_GRCh37_e59/human_ancestor_8.fa"
+    output:
+        haps = "output/clues/02_clean-input/stc1-clean.haps",
+        sample = "output/clues/02_clean-input/stc1-clean.sample"
+    params:
+        outprefix = "output/clues/02_clean-input/stc1-clean"
+    log: "output/clues/02_clean-input/relate-prepare-input-files.log"
+    shell: "touch {params.outprefix}.dist ; "
+           "bin/relate/scripts/PrepareInputFiles/PrepareInputFiles.sh "
+           "--haps {input.haps} --sample {input.sample} --ancestor {input.reference} "
+           "-o {params.outprefix} &> {log}; "
+           "gunzip {output.haps}.gz ; "
+           "gunzip {output.sample}.gz ; "
+
+
+rule relate_convert_vcf:
+    input: config["raw_sweep_region_vcf"]
+    output:
+        haps = "output/clues/01_raw-data/stc1.haps",
+        sample = "output/clues/01_raw-data/stc1.sample"
+    log: "output/clues/01_raw-data/relate-convert-from-vcf.log"
+    shell: "bin/relate/bin/RelateFileFormats --mode ConvertFromVcf --haps {output.haps} --sample {output.sample} -i raw-data/20211130_sweep-region/high_cov.SNP1.hg19_chr8.phased_STC1.vcf.recode &> {log}"
+
 
 rule selection_scan:
     input:
@@ -176,24 +222,17 @@ rule sweepfinder2:
     shell: "bin/SweepFinder2 -l {params.grid} {input.data} {input.sfs} {output} &> {log}"
 
 
-rule convert_messer_neher_notebook:
-    input: "output/messerneher/messerneher2012.ipynb"
-    output: "output/messerneher/messerneher2012.html"
-    conda: "envs/simulate.yaml"
-    shell: "jupyter nbconvert --to html {input}"
-
-
 rule infer_s_messer_neher_2012:
     input:
         ms = "output/empirical-windows/ms/sweep.ms",
     output:
-        estimate = "output/messerneher/messerneher2012-estimate.txt",
-        notebook="output/messerneher/messerneher2012.ipynb"
+        estimate = "output/messerneher/mn2012_L-{window_size}_n-{haps_per_cluster}_estimate.txt",
+        clusters = "output/messerneher/mn2012_L-{window_size}_n-{haps_per_cluster}_hap-clusters.pdf",
+        hfs_folder = directory("output/messerneher/mn2012_L-{window_size}_n-{haps_per_cluster}_hfs"),
     params:
         mut_rate = 1.083e-8,
         rec_rate = 1.083e-8
     conda: "envs/simulate.yaml"
-    log: notebook="output/messerneher/messerneher2012.ipynb"
     notebook: "notebooks/inference/estimate-s-messer-neher-2012.py.ipynb"
 
 
