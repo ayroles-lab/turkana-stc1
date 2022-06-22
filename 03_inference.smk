@@ -37,7 +37,7 @@ rule all:
             haps_per_cluster=[3, 5, 10],
             kind=["hap-clusters.pdf", "estimate.txt"]
         ),
-        sweepfinder = "output/sweepfinder/sweepfinder2-results.tsv",
+        sweepfinder = "output/sweepfinder/sweed-results.tsv",
         selection_scan = "output/selection-scan/selection-scan-features.tsv",
         clues = clues_sites
 
@@ -211,15 +211,18 @@ rule selection_scan:
     notebook: "notebooks/inference/selection-scan.py.ipynb"
 
 
-rule sweepfinder2:
+rule sweed:
     input:
         data = "output/sweepfinder/stc1-sweepfinder.tsv",
         sfs = "output/sweepfinder/turkana-sfs.tsv"
-    output: "output/sweepfinder/sweepfinder2-results.tsv"
-    log: "output/sweepfinder/sweepfinder2.log"
+    output: "output/sweepfinder/sweed-results.tsv"
+    log: "output/sweepfinder/sweed.log"
     params:
-        grid = config["sweepfinder_grid_number"]
-    shell: "bin/SweepFinder2 -l {params.grid} {input.data} {input.sfs} {output} &> {log}"
+        grid = 10000
+    shell:
+        "bin/SweeD -name stc1 -grid {params.grid} -folded -ploidy 1 -isfs {input.sfs} -input {input.data} &> {log} ;"
+        "rm SweeD_Info.stc1 ;"
+        "mv SweeD_Report.stc1 {output} ;"
 
 
 rule infer_s_messer_neher_2012:

@@ -29,5 +29,3 @@ inference_targets:
   - sgv-drift-time
   - sgv-total-time
   - num-adaptive-alleles
-
-sweepfinder_grid_number: 21

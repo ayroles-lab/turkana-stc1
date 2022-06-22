@@ -15,7 +15,29 @@ rule all:
         "fig/sweep-signature_dominant.pdf",
         "fig/sweep-signature_codominant.pdf",
         "fig/clues-results.pdf",
+        "output/estimated-sweep-time.txt",
+        "fig/sim-timing.pdf",
+        "fig/learning-curves.pdf",
+        "fig/selstrength-validation.pdf",
+        "fig/sweep-mode_validation.pdf"
 
+
+rule plot_ml_results:
+    input:
+        sim_params = "output/simulation-data-processed/parameters/codominant_parameters-clean.tsv",
+        selstrength = "output/inferences-training/log-sel-strength_codominant_validation_replicate-0.tsv",
+        sweepmode = "output/inferences-training/sweep-mode_codominant_validation_replicate-0.tsv"
+    output:
+        timings_table = "output/estimated-sweep-time.txt",
+        timing = "fig/sim-timing.pdf",
+        learning_curves = "fig/learning-curves.pdf",
+        selstrength = "fig/selstrength-validation.pdf",
+        sweepmode = "fig/sweep-mode_validation.pdf"
+    params:
+        predicted_s = 0.041,
+        predicted_f0 = 0.06
+    conda: "envs/r.yaml"
+    notebook: "notebooks/plot/ml-results.r.ipynb"
 
 rule plot_clues:
     input:
@@ -66,7 +88,7 @@ rule plot_selection_scan:
     notebook: "notebooks/plot/selection-scan.r.ipynb"
 
 rule plot_sweepfinder:
-    input: "output/sweepfinder/sweepfinder2-results.tsv"
+    input: "output/sweepfinder/sweed-results.tsv"
     output: "fig/sweepfinder.pdf"
     conda: "envs/r.yaml"
     params:
