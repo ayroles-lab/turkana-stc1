@@ -1,5 +1,5 @@
 
-configfile: "03_config.yaml"
+configfile: "config.yaml"
 
 def relate_sites_of_interest():
     with open("output/clues/05_sample-branch-lengths/stc1-sites-of-interest.txt") as f:
