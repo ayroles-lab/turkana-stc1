@@ -19,7 +19,39 @@ rule all:
         "fig/sim-timing.pdf",
         "fig/learning-curves.pdf",
         "fig/selstrength-validation.pdf",
-        "fig/sweep-mode_validation.pdf"
+        "fig/sweep-mode_validation.pdf",
+        "fig/paper/clues.pdf",
+        "fig/paper/results.pdf"
+
+
+rule plot_results_for_paper:
+    input:
+        method_diagram = "fig-manual/method-diagram.pdf",
+        selstrength = "output/inferences-training/log-sel-strength_codominant_validation_replicate-0.tsv",
+        sweepmode = "output/inferences-training/sweep-mode_codominant_validation-roc_replicate-0.tsv",
+        clues = "output/clues/clues-results-tidy.tsv",
+        empirical_inferences = expand(
+            "output/inferences-empirical/{target}_{dataset}_empirical_replicate-{rep}.tsv",
+            target=["log-sel-strength", "sweep-mode"],
+            dataset=["codominant", "dominant"],
+            rep=range(10)
+        )
+        # sim_params = "output/simulation-data-processed/parameters/codominant_parameters-clean.tsv",
+        # clues_arg_info = "output/clues/04_popsize-inference/stc1-popsizes.mut",
+    output:
+        figure = "fig/paper/results.pdf"
+    conda: "envs/r.yaml"
+    notebook: "notebooks/plot/paper-results.r.ipynb"
+
+
+rule get_roc_curve:
+    input:
+        data="output/inferences-training/{target}_{dataset}_validation_replicate-{rep}.tsv",
+        labels="output/trained-models/{target}_{dataset}_labels_replicate-{rep}.txt"
+    output:
+        curve="output/inferences-training/{target}_{dataset}_validation-roc_replicate-{rep}.tsv",
+    conda: "envs/ml-nodeeplearning.yaml"
+    notebook: "notebooks/plot/roc-curve.py.ipynb"
 
 
 rule plot_ml_results:
@@ -48,7 +80,8 @@ rule plot_clues:
         individual_plots = expand(
             "fig/clues-individual-sites/clues_{site}.pdf",
             site=relate_sites_of_interest()
-        )
+        ),
+        paper_results = "fig/paper/clues.pdf"
     params:
         plot_dir = directory("fig/clues-individual-sites/")
     conda: "envs/r.yaml"

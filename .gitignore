@@ -3,6 +3,7 @@ benchmarks
 bin
 doc
 fig
+fig-manual
 logs
 output
 raw-data
